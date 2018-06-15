@@ -17,6 +17,7 @@ source("stroke_sim_script.R")
 
 #---- Performing the simulation ----
 #suppressMessages command silences the output from fitting the GLM
+#transpose matrix from 3 x 1,000 to 1,000 x 3 and set column names
 suppressMessages(conf_ints <- as_data_frame(t(replicate(1000, stroke_sim()))))
 colnames(conf_ints) <- c("A", "L", "U")
 
