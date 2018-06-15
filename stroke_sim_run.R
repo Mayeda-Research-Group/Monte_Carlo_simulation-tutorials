@@ -20,7 +20,7 @@ source("stroke_sim_script.R")
 suppressMessages(conf_ints <- as_data_frame(t(replicate(1000, stroke_sim()))))
 colnames(conf_ints) <- c("A", "L", "U")
 
-#Finding the coverage probability and average estimated OR
+#Finding the  average estimated OR and 95% CI coverage 
 avg_OR <- conf_ints %>% summarize_at("A", mean)
 coverage <- conf_ints %>% mutate(capture = L < 1 & U > 1) %>%  
   summarize_at("capture", mean)
