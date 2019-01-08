@@ -2,17 +2,12 @@
 if (!require("pacman")) 
   install.packages("pacman", repos='http://cran.us.r-project.org')
 
-p_load("tidyverse", "MASS", "ggplot2", "latex2exp")
+p_load("tidyverse", "MASS")
 
 #Using standard notation (as opposed to scientific), rounded to three 
 #decimal places
 options(scipen = 999)
 options(digits = 3)
-
-set.seed(4418)
-
-#---- Specify the parameter file ----
-source("stroke_sim_par.R")
 
 #---- Defining the probability mechanisms for S and Y ----
 p_S <- function(A, U){
