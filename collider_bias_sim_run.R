@@ -2,23 +2,26 @@
 if (!require("pacman")) 
   install.packages("pacman", repos='http://cran.us.r-project.org')
 
-p_load("tidyverse", "MASS", "ggplot2", "latex2exp")
+p_load("tidyverse", "ggplot2", "latex2exp")
 
 #Using standard notation (as opposed to scientific), rounded to three 
 #decimal places
 options(scipen = 999)
 options(digits = 3)
 
+#---- Set the seed ----
 set.seed(4418)
 
 #---- Specify the parameter file ----
-source("stroke_sim_par.R")
-source("stroke_sim_script.R")
+source("collider_bias_sim_par.R")
+
+#---- Load the simulation script ----
+source("collider_bias_sim_script.R")
 
 #---- Performing the simulation ----
 #suppressMessages command silences the output from fitting the GLM
 #transpose matrix from 3 x 1,000 to 1,000 x 3 and set column names
-suppressMessages(conf_ints <- as_data_frame(t(replicate(1000, stroke_sim()))))
+suppressMessages(conf_ints <- as.data.frame(t(replicate(1000, stroke_sim()))))
 colnames(conf_ints) <- c("A", "L", "U")
 
 #Finding the  average estimated OR and 95% CI coverage 
