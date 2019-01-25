@@ -12,8 +12,7 @@
 #   (2) confounding_sim_script.R:                                              #
 #       -Generates and analyzes data and stores results                        #
 #   (3) confounding_sim_run.R:                                                 #
-#       -Runs simulation and stores results                                    #
-#                                                                              #
+#       -Runs simulation and stores results                                    #                                                              #
 #******************************************************************************#
 
 #******************************************************************************#
