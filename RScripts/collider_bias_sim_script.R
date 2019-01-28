@@ -85,6 +85,20 @@ collider_sim <- function(){
                 "S" = rbinom(n = samp_size, size = 1, prob = probS), 
                 "Y" = rbinom(n = samp_size, size = 1, prob = probY))
   
+  #---- Analyze data ----
+  #Check the mean value of U (should be very close, if not exactly, 0)
+  #Calculate the proportion of people with exposure (A) = 1
+  #Calculate the proportion of people with selection (S) = 1
+  #Calculate the proportion of people with outcome (Y) = 1
+  
+  mean_U <- mean(obs$U)
+  p_A <- sum(obs$A)/samp_size
+  p_S <- sum(obs$S)/samp_size
+  p_Y <- sum(obs$Y)/samp_size 
+  
+  #Check proportion of people with selection (S) = 1 by exposure (A)
+  p_S_A0 <- obs %>% filter(A == 0) %>% mean(.$S)
+  
   #Estimates of primary interest:  Estimated ORs for A and Y among S = 1
   #Store ORs and 95% CI limits
   selected <- obs %>% filter(S == 1)
