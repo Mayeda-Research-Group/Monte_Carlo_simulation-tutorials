@@ -26,9 +26,6 @@
 # pacman: clean way to import many R packages at one time                      #
 #         (https://www.rdocumentation.org/packages/pacman/versions/0.5.0)      #
 #                                                                              #
-# here: prevents the issues associated with specifying file paths              #
-#       (https://www.rdocumentation.org/packages/here/versions/0.1)            #
-#                                                                              #
 # tidyverse: a suite of data wrangling, analysis, and visualization packages   #
 #            (https://www.rdocumentation.org/packages/tidyverse/versions/1.2.1)#
 #                                                                              #
