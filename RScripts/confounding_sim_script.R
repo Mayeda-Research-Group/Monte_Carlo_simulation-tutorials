@@ -96,7 +96,7 @@ confounding_sim <- function(){
   p_exposure <- mean(dataset$exposure) 
   p_outcome <- mean(dataset$outcome)        
   
-  #---- Look at associations and store results ----
+  #---- Look at associations and return results ----
   
   #Estimated OR & 95% CI for exposure-outcome association
   #Adjusting for U (confounder)
