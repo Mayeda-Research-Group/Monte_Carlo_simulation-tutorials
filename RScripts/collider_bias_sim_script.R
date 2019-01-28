@@ -128,13 +128,23 @@ collider_sim <- function(){
     summarise_at("U", mean) %>% as.numeric()
   
   #---- Look at associations and return results ----
+  #Check ORs for A and Y (whole population). No bias anticipated
+  no_bias_model <- glm(Y ~ A, family = binomial(), data = obs)
+  
+  OR_AY_all <- exp(no_bias_model$coefficients[["A"]])
+  ci_95_no_bias <- exp(confint(no_bias_model, "A", level = 0.95))
+  ub_OR_AY_all <- ci_95_no_bias[["97.5 %"]]
+  lb_OR_AY_all <- ci_95_no_bias[["2.5 %"]]
   
   #Estimates of primary interest:  Estimated ORs for A and Y among S = 1
-  #Store ORs and 95% CI limits
+  #Return ORs and 95% CI limits
   selected <- obs %>% filter(S == 1)
   sel_model <- glm(Y ~ A, family = binomial(), data = selected)
-  sel_OR <- exp(sel_model$coefficients["A"])
-  ci_95 <- exp(confint(sel_model, "A", level = 0.95))
+  
+  OR_AY_S1 <- exp(sel_model$coefficients[["A"]])
+  ci_95_selected <- exp(confint(sel_model, "A", level = 0.95))
+  ub_OR_AY_S1 <- ci_95_selected[["97.5 %"]]
+  lb_OR_AY_S1 <- ci_95_selected[["2.5 %"]]
   return(c(sel_OR, ci_95))
 }
 
