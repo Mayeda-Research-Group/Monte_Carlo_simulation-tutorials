@@ -95,7 +95,7 @@ coverage_prob <- sim_data %>%
   select("covg_OR_AY_S1", "covg_OR_AY_all") %>% 
   colMeans(., na.rm = TRUE) %>% round(3)
 
-#---- Produce and save plots ----
+#---- Visualizations ----
 plot_title <- paste("Average OR for Selected = ", 
                     round(avg_OR, 2), "; ",   
                     round(coverage*100, 0), 
@@ -124,6 +124,10 @@ CI_plot <-
 ggsave(filename = here("Plots", "CI_95_plot.jpeg"), 
                        plot = CI_plot, width = 8, height = 6, dpi = 300, 
                        units = "in", device = 'jpeg')
+
+#---- Save results as .csv ----
+
+#---- Display numerical results ----
 
 #End timer
 stop_time <- Sys.time()
