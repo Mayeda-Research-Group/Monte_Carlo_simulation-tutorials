@@ -45,10 +45,8 @@ if (!require("pacman"))
 
 p_load("tidyverse")
 
-#Using standard notation (as opposed to scientific), rounded to three 
-#decimal places
+#Using standard notation (as opposed to scientific)
 options(scipen = 999)
-options(digits = 3)
 
 #---- Custom Functions ----
 #Probability of selection
