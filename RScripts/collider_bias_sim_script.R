@@ -70,20 +70,20 @@ collider_sim <- function(){
   # What's happening in each column...
   #   "id": Numbering the observations
   #   "A": Flip a coin with success probability p_A for each observation
-  #   "U": Creating samp_size number of standard normal random variables
+  #   "U": Creating num_obs number of standard normal random variables
   #   "prob_S": Applying the p_S function to the column of A values and column
   #             of U values to determine probability of selection
   #   "prob_Y": Applying the p_Y function to the column of A values and column
   #             of U values to determine probability of exposure
   #   "S": Flip a coin with success probability prob_S for each observation
   #   "Y": Flip a coin with success probability prob_y for each observation
-  obs <- tibble("id" = seq(from = 1, to = samp_size, by = 1), 
-                "A" = rbinom(n = samp_size, size = 1, p = p_A), 
-                "U" = rnorm(n = samp_size, mean = 0, sd = 1), 
+  obs <- tibble("id" = seq(from = 1, to = num_obs, by = 1), 
+                "A" = rbinom(n = num_obs, size = 1, p = p_A), 
+                "U" = rnorm(n = num_obs, mean = 0, sd = 1), 
                 "probS" = p_S(A, U), 
                 "probY" = p_Y(A, U), 
-                "S" = rbinom(n = samp_size, size = 1, prob = probS), 
-                "Y" = rbinom(n = samp_size, size = 1, prob = probY))
+                "S" = rbinom(n = num_obs, size = 1, prob = probS), 
+                "Y" = rbinom(n = num_obs, size = 1, prob = probY))
   
   #---- Analyze data ----
   #Check the mean value of U (should be very close, if not exactly, 0)
