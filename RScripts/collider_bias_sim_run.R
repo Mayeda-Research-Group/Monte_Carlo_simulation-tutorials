@@ -1,28 +1,69 @@
+#******************************************************************************#
+# Using Using Monte Carlo Simulations for Quantitative Bias Analysis           #
+# Date                                                                         #
+# Crystal Shaw                                                                 #
+# Questions/Comments: c.shaw@ucla.edu                                          #
+#                                                                              #
+# Simulation example: Collider-stratification bias                             #
+#                                                                              #
+# Required files to run simulation:                                            #
+#   (1) collider_bias_sim_par.R:                                               #
+#       -Sets parameter inputs for the simulation                              #
+#   (2) collider_bias_sim_script.R:                                            #
+#       -Generates and analyzes data and returns results                       #
+#   (3) colider_bias_sim_run.R:                                                #
+#       -Runs simulation and stores results                                    #                                                              
+#******************************************************************************#
+
+#******************************************************************************#
+# The purpose of this file is to run multiple iterations of sample generation  # 
+# and summarize and store the results.                                         #
+#******************************************************************************#
+
+#******************************************************************************#
+# Package quick reference and resources                                        #
+#                                                                              #
+# pacman: clean way to import many R packages at one time                      #
+#         (https://www.rdocumentation.org/packages/pacman/versions/0.5.0)      #
+#                                                                              #
+# here: prevents the issues associated with specifying file paths              #
+#       (https://www.rdocumentation.org/packages/here/versions/0.1)            #
+#                                                                              #
+# tidyverse: a suite of data wrangling, analysis, and visualization packages   #
+#            (https://www.rdocumentation.org/packages/tidyverse/versions/1.2.1)#
+#                                                                              #
+# latex2exp: converts latex to expressions that can be included in plot text   #
+#           (https://www.rdocumentation.org/packages/latex2exp/versions/0.4.0) #
+#******************************************************************************#
+
 #---- Package Loading and Options ----
 if (!require("pacman")) 
   install.packages("pacman", repos='http://cran.us.r-project.org')
 
-p_load("tidyverse", "ggplot2", "latex2exp")
+p_load("here", "tidyverse", "latex2exp")
 
-#Using standard notation (as opposed to scientific), rounded to three 
-#decimal places
+#Using standard notation (as opposed to scientific)
 options(scipen = 999)
-options(digits = 3)
 
 #---- Set the seed ----
 set.seed(4418)
 
-#---- Specify the parameter file ----
-source("collider_bias_sim_par.R")
+#---- Source Files ----
+source(here("RScripts", "collider_bias_sim_par.R"))     #parameter file
+source(here("RScripts", "collider_bias_sim_script.R"))  #simulation script
 
-#---- Load the simulation script ----
-source("collider_bias_sim_script.R")
+#---- Run the simulation ----  
+#Start timer
+start_time <- Sys.time()
 
-#---- Performing the simulation ----
-#suppressMessages command silences the output from fitting the GLM
-#transpose matrix from 3 x 1,000 to 1,000 x 3 and set column names
-suppressMessages(conf_ints <- as.data.frame(t(replicate(1000, stroke_sim()))))
-colnames(conf_ints) <- c("A", "L", "U")
+#Run simulation 
+#   supressMessages hides messages from fitting the logistic regression
+#   %>% is a "pipe"... it feeds the output of one command to the next
+#   t() transposes the results so that we have one simulation result per row of
+#   the matrix
+#   convert this to a dataframe so we can use the tidyverse functions
+sim_data <- suppressMessages(replicate(B, collider_sim())) %>% t() %>%
+  as.data.frame()
 
 #Finding the  average estimated OR and 95% CI coverage 
 avg_OR <- conf_ints %>% summarize_at("A", mean)
@@ -55,8 +96,15 @@ CI_plot <-
   scale_x_continuous(breaks = NULL)
   
 
-ggsave(filename = "CI_95_plot.jpeg", plot = CI_plot, width = 8, height = 6, 
-       dpi = 300, units = "in", device = 'jpeg')
+ggsave(filename = here("Plots", "CI_95_plot.jpeg"), 
+                       plot = CI_plot, width = 8, height = 6, dpi = 300, 
+                       units = "in", device = 'jpeg')
+
+#End timer
+stop_time <- Sys.time()
+
+#---- Display run time ----
+stop_time - start_time
 
 
 
