@@ -93,8 +93,8 @@ confounding_sim <- function(){
   #Calculate the proportion of people with outcome = 1
   
   mean_U <- mean(dataset$U)
-  p_exposure <- sum(dataset$exposure)/num_obs 
-  p_outcome <- sum(dataset$outcome)/num_obs        
+  p_exposure <- mean(dataset$exposure) 
+  p_outcome <- mean(dataset$outcome)        
   
   #---- Look at associations and store results ----
   
