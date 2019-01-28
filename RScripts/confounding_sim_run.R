@@ -1,0 +1,193 @@
+#******************************************************************************#
+# SER 2019: Using Using Monte Carlo Simulations for Quantitative Bias Analysis #
+# February ___, 2019                                                           #
+# Crystal Shaw                                                                 #
+# Questions/Comments: c.shaw@ucla.edu                                          #
+#                                                                              #
+# Simulation example: Bias from unmeasured confounding                         #
+#                                                                              #
+# Required files to run simulation:                                            #
+#   (1) confounding_sim_par.R:                                                 #
+#       -Sets parameter inputs for the simulation                              #
+#   (2) confounding_sim_script.R:                                              #
+#       -Generates and analyzes data and stores results                        #
+#   (3) confounding_sim_run.R:                                                 #
+#       -Runs simulation and stores results                                    #                                                              
+#******************************************************************************#
+
+#******************************************************************************#
+# The purpose of this file is to run multiple iterations of sample generation  # 
+# and summarize and store the results.                                         #
+#******************************************************************************#
+
+#******************************************************************************#
+# Package quick reference and resources
+#   -pacman
+#   -here
+#   -tidyverse
+#   -magrittr
+#
+#******************************************************************************#
+
+#---- Package Loading and Options ----
+if (!require("pacman")) 
+  install.packages("pacman", repos='http://cran.us.r-project.org')
+
+p_load("here", "tidyverse", "magrittr")
+
+set.seed(20190130)
+
+#Using standard notation (as opposed to scientific), 
+#Rounded to two decimal places
+options(scipen = 999)
+
+#---- Source Files ----
+source(here("RScripts", "confounding_sim_par.R"))     #call parameter file
+source(here("RScripts", "confounding_sim_script.R"))  #call simulation script
+
+#---- Run the simulation ----  
+#Start timer
+start_time <- Sys.time()
+  
+#Create variable for causal/true ORs for effect of exposure on outcome 
+#specified in data generation and analysis file 
+true_OR_exposure_outcome = 1.0
+
+#Run simulation 
+#   supressMessages hides messages from fitting the logistic regression
+#   %>% is a "pipe"... it feeds the output of one command to the next
+#   t() transposes the results so that we have one simulation result per row of
+#   the matrix
+#   convert this to a dataframe so we can use the tidyverse functions
+sim_data <- suppressMessages(replicate(B, confounding_sim())) %>% t() %>%
+  as.data.frame()
+
+#---- Numerical summaries ----
+#Across B replications, calculate and store mean value of selected variables 
+#Round to two decimal places
+
+mean_results <- sim_data %>% select("mean_U", "p_exposure", "p_outcome", 
+                                    "OR_exposure_Uyes", "OR_exposure_Uno") %>%
+  colMeans() %>% round(2)
+
+#For each replication, generate indicator variable for whether the 95% CI for 
+#the OR includes the causal/true OR
+#Appends this to the simulation results dataset
+sim_data %<>% 
+  mutate("covg_OR_exposure_Uyes" = 
+           if_else(ub_OR_exposure_Uyes > true_OR_exposure_outcome & 
+                     lb_OR_exposure_Uyes < true_OR_exposure_outcome, 1, 0), 
+         "covg_OR_exposure_Uno" = 
+           if_else(ub_OR_exposure_Uno > true_OR_exposure_outcome & 
+                     lb_OR_exposure_Uno < true_OR_exposure_outcome, 1, 0))
+                  
+#Average coverage probabilities across B replications
+coverage_prob <- sim_data %>% 
+  select("covg_OR_exposure_Uyes", "covg_OR_exposure_Uno") %>%
+  colMeans(., na.rm = TRUE) %>% round(3)
+
+#---- Visualizations ----
+#Generate plots of estimated OR and 95% CI across B simulated samples
+#Plot estimated OR adjusted for U
+plot_title_adj <- paste("Average OR for U-adjusted = ", 
+                    mean_results[["OR_exposure_Uyes"]], "; ",   
+                    round(coverage_prob[["covg_OR_exposure_Uyes"]]*100, 0), 
+                    "% of 95% CI include the true OR = 1", 
+                    sep = "")
+plot_subtitle_adj <- paste("Results based on ", B, " simulated samples", 
+                           sep = "")
+
+#For y-axis scaling
+min_y <- min(sim_data$lb_OR_exposure_Uyes, na.rm = TRUE)
+max_y <- max(sim_data$ub_OR_exposure_Uyes, na.rm = TRUE)
+
+CI_adjusted_plot <- 
+  ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
+                              y = OR_exposure_Uyes)) + 
+  geom_errorbar(width = 10, alpha = 0.5, color = "#A9A9A9",
+                ymin = sim_data$lb_OR_exposure_Uyes, 
+                ymax = sim_data$ub_OR_exposure_Uyes) +
+  geom_point(size = 2, alpha = 0.75) +
+  geom_hline(aes(yintercept = 1), size = 1.5) + 
+  geom_hline(aes(yintercept = mean_results[["OR_exposure_Uyes"]]), size = 1.5, 
+             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  theme_minimal() + 
+  labs(title = plot_title_adj, 
+       subtitle = plot_subtitle_adj) + 
+  ylab("OR of exposure") + xlab("") +
+  theme(plot.title = element_text(size = 15)) + 
+  theme(axis.title.y = element_text(size = 12)) + 
+  scale_y_continuous(limits = c(min_y, max_y), 
+                     breaks = c(seq(from = min_y, to = max_y, 
+                                    by = 0.25))) + 
+  scale_x_continuous(breaks = NULL)
+
+ggsave(filename = here("Plots", "plot_est_OR_CI_adj.jpeg"), 
+       plot = CI_adjusted_plot, width = 8, height = 6, dpi = 300, units = "in", 
+       device = 'jpeg')                            
+
+#Generate plots of estimated OR and 95% CI across B simulated samples
+#Plot estimated OR unadjusted for U
+plot_title_unadj <- paste("Average crude OR = ", 
+                    mean_results[["OR_exposure_Uno"]], "; ",   
+                    round(coverage_prob[["covg_OR_exposure_Uno"]]*100, 0), 
+                    "% of 95% CI include the true OR = 1", 
+                    sep = "")
+plot_subtitle_unadj <- paste("Results based on ", B, " simulated samples", 
+                             sep = "")
+
+#For y-axis scaling
+min_y <- min(sim_data$lb_OR_exposure_Uno, na.rm = TRUE)
+max_y <- max(sim_data$ub_OR_exposure_Uno, na.rm = TRUE)
+
+CI_unadjusted_plot <- 
+  ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
+                              y = OR_exposure_Uno)) + 
+  geom_errorbar(width = 10, alpha = 0.5, color = "#A9A9A9",
+                ymin = sim_data$lb_OR_exposure_Uno, 
+                ymax = sim_data$ub_OR_exposure_Uno) +
+  geom_point(size = 2, alpha = 0.75) +
+  geom_hline(aes(yintercept = 1), size = 1.5) + 
+  geom_hline(aes(yintercept = mean_results[["OR_exposure_Uno"]]), size = 1.5, 
+             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  theme_minimal() + 
+  labs(title = plot_title_unadj, 
+       subtitle = plot_subtitle_unadj) + 
+  ylab("OR of exposure") + xlab("") +
+  theme(plot.title = element_text(size = 15)) + 
+  theme(axis.title.y = element_text(size = 12)) + 
+  scale_y_continuous(limits = c(min_y, max_y), 
+                     breaks = c(seq(from = min_y, to = max_y, 
+                                    by = 0.25))) + 
+  scale_x_continuous(breaks = NULL)
+
+ggsave(filename = here("Plots", "plot_est_OR_CI_crude.jpeg"), 
+       plot = CI_unadjusted_plot, width = 8, height = 6, dpi = 300, 
+       units = "in", device = 'jpeg')     
+
+#---- Save results as .csv ----
+write_csv(sim_data, here("Data", "confounding_results_each_replication.csv"))
+
+
+#---- old code ----
+
+#            /*List results */
+#            *Across B replications, average mean value of U, proportion of people with exposure=1, proportion of people with outcome=1
+#            scalar list mean_mean_U mean_p_exposure mean_p_outcome
+#            
+#            *Across B replications, average estimated OR for exposure on outcome, adjusting for U
+#            scalar list mean_OR_exposure_Uyes
+#            
+#            *Across B replications, average estimated OR for exposure on outcome, not adjusting for U
+#            scalar list mean_OR_exposure_Uno
+#            
+#            *Proportion of 95% CIs for OR for exposure on outcome that include the causal/true OR 
+#            scalar list P_covg_OR_exposure_Uyes P_covg_OR_exposure_Uno 
+#            
+#            
+#End timer
+stop_time <- Sys.time()
+
+#Display run time
+stop_time - start_time
+           

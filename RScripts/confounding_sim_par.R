@@ -26,12 +26,14 @@
 #******************************************************************************#
 #                             SET PARAMETERS                                   #
 #******************************************************************************#
-  
-#Parameters for odds of exposure
+B = 1000         #number of iterations of sample generation
+num_obs = 5000   #number of observations in each sample
+
+#---- Parameters for odds of exposure ----
 g0 = log(0.20/(1-0.20))	#log odds [p/(1-p)] of exposure for ref group (U = 0)
 g1 = log(2.0) 			    #effect of one-unit higher U on log odds of exposure 
 
-#Parameters for odds of outcome
+#---- Parameters for odds of outcome ----
 b0 = log(0.10/(1-0.10)) #log odds [p/(1-p)] of outcome for ref group 
                         #(U = 0, exp = 0)
 b1 = log(1.0) 			    #effect of exposure on log odds of outcome

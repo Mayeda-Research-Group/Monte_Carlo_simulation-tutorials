@@ -1,3 +1,5 @@
+#Add comment block
+
 #---- Package Loading and Options ----
 if (!require("pacman")) 
   install.packages("pacman", repos='http://cran.us.r-project.org')
@@ -7,9 +9,10 @@ p_load("tidyverse", "MASS")
 #Using standard notation (as opposed to scientific), rounded to three 
 #decimal places
 options(scipen = 999)
-options(digits = 3)
+options(digits = 2)
 
 #---- Defining the probability mechanisms for S and Y ----
+#Oftentimes these functions are put into separate RScripts...
 p_S <- function(A, U){
   exp(g0 + g1*A + g2*U + g3*U*A)/(1 + exp(g0 + g1*A + g2*U + g3*U*A))
 }
@@ -21,6 +24,8 @@ p_Y <- function(A, U){
 #---- The simulation function ----
 stroke_sim <- function(){
   #Generating the data
+  #Comment about tibbles
+  #Comment on each line # about what it does
   #Creating IDs and exogenous variables
   #Generating S and Y
   obs <- tibble("id" = seq(from = 1, to = samp_size, by = 1), 
