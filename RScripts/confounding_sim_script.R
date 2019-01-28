@@ -21,17 +21,17 @@
 #******************************************************************************#
 
 #******************************************************************************#
-# Package quick reference and resources
-# 
-# pacman: clean way to import many R packages at one time 
-#         (https://www.rdocumentation.org/packages/pacman/versions/0.5.0)
-#   
-# here: prevents the issues associated with specifying file paths
-#       (https://www.rdocumentation.org/packages/here/versions/0.1)
-#   
-# tidyverse: a suite of data wrangling, analysis, and visualization packages
-#            (https://www.rdocumentation.org/packages/tidyverse/versions/1.2.1)
-#
+# Package quick reference and resources                                        #
+#                                                                              #
+# pacman: clean way to import many R packages at one time                      #
+#         (https://www.rdocumentation.org/packages/pacman/versions/0.5.0)      #
+#                                                                              #
+# here: prevents the issues associated with specifying file paths              #
+#       (https://www.rdocumentation.org/packages/here/versions/0.1)            #
+#                                                                              #
+# tidyverse: a suite of data wrangling, analysis, and visualization packages   #
+#            (https://www.rdocumentation.org/packages/tidyverse/versions/1.2.1)#
+#                                                                              #
 #******************************************************************************#
 
 #******************************************************************************#
@@ -64,9 +64,9 @@ confounding_sim <- function(){
   
   #---- Creating the dataset ----
   # We generate a tibble to store all the data. Tibbles are just specific types 
-  # of dataframes... they only print the first 10 rows in the console when called
-  # (unless more rows are specified) and list the datatype under each column name.
-  # I find them nifty for debugging issues with datatypes
+  # of dataframes... they only print the first 10 rows in the console when 
+  # called (unless more rows are specified) and list the datatype under each 
+  # column name. I find them nifty for debugging issues with datatypes
   
   # What's happening in each column...
   #   "ID": Numbering the observations
@@ -84,9 +84,11 @@ confounding_sim <- function(){
   dataset <- tibble("ID" = seq(from = 1, to = num_obs, by = 1), 
                     "U" = rnorm(n = num_obs, mean = 0, sd = 1), 
                     "Pexposure" = prob_exp(U),
-                    "exposure" = rbinom(n = num_obs, size = 1, prob = Pexposure),  
+                    "exposure" = rbinom(n = num_obs, size = 1, 
+                                        prob = Pexposure),  
                     "Poutcome" = prob_out(U, exposure), 
-                    "outcome" = rbinom(n = num_obs, size = 1, prob = Poutcome))
+                    "outcome" = rbinom(n = num_obs, size = 1, 
+                                       prob = Poutcome))
   
   #---- Analyze data ----
   #Check the mean value of U (should be very close to 0)
