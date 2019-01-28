@@ -26,9 +26,6 @@
 # pacman: clean way to import many R packages at one time                      #
 #         (https://www.rdocumentation.org/packages/pacman/versions/0.5.0)      #
 #                                                                              #
-# here: prevents the issues associated with specifying file paths              #
-#       (https://www.rdocumentation.org/packages/here/versions/0.1)            #
-#                                                                              #
 # tidyverse: a suite of data wrangling, analysis, and visualization packages   #
 #            (https://www.rdocumentation.org/packages/tidyverse/versions/1.2.1)#
 #                                                                              #
@@ -46,7 +43,7 @@
 if (!require("pacman")) 
   install.packages("pacman", repos='http://cran.us.r-project.org')
 
-p_load("here", "tidyverse")
+p_load("tidyverse")
 
 #Using standard notation (as opposed to scientific), rounded to three 
 #decimal places
@@ -54,21 +51,34 @@ options(scipen = 999)
 options(digits = 3)
 
 #---- Custom Functions ----
+#Probability of selection
 p_S <- function(A, U){
   exp(g0 + g1*A + g2*U + g3*U*A)/(1 + exp(g0 + g1*A + g2*U + g3*U*A))
 }
 
+#Probability of exposure
 p_Y <- function(A, U){
   exp(b0 + b1*A + b2*U)/(1 + exp(b0 + b1*A + b2*U))
 }
 
 #---- The simulation function ----
 collider_sim <- function(){
-  #Generating the data
-  #Comment about tibbles
-  #Comment on each line # about what it does
-  #Creating IDs and exogenous variables
-  #Generating S and Y
+  #---- Creating the dataset ----
+  # We generate a tibble to store all the data. Tibbles are just specific types 
+  # of dataframes... they only print the first 10 rows in the console when 
+  # called (unless more rows are specified) and list the datatype under each 
+  # column name. I find them nifty for debugging issues with datatypes
+  
+  # What's happening in each column...
+  #   "id": Numbering the observations
+  #   "A": Flip a coin with success probability p_A for each observation
+  #   "U": Creating samp_size number of standard normal random variables
+  #   "prob_S": Applying the p_S function to the column of A values and column
+  #             of U values to determine probability of selection
+  #   "prob_Y": Applying the p_Y function to the column of A values and column
+  #             of U values to determine probability of exposure
+  #   "S": Flip a coin with success probability prob_S for each observation
+  #   "Y": Flip a coin with success probability prob_y for each observation
   obs <- tibble("id" = seq(from = 1, to = samp_size, by = 1), 
                 "A" = rbinom(n = samp_size, size = 1, p = p_A), 
                 "U" = rnorm(n = samp_size, mean = 0, sd = 1), 
