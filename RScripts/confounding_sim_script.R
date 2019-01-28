@@ -88,7 +88,7 @@ confounding_sim <- function(){
                                        prob = Poutcome))
   
   #---- Analyze data ----
-  #Check the mean value of U (should be very close to 0)
+  #Check the mean value of U (should be very close, if not exactly, 0)
   #Calculate the proportion of people with exposure = 1
   #Calculate the proportion of people with outcome = 1
   
