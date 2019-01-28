@@ -1,6 +1,6 @@
 #******************************************************************************#
-# SER 2019: Using Using Monte Carlo Simulations for Quantitative Bias Analysis #
-# February ___, 2019                                                           #
+# Using Using Monte Carlo Simulations for Quantitative Bias Analysis           #
+# Date                                                                         #
 # Crystal Shaw                                                                 #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
@@ -10,7 +10,7 @@
 #   (1) confounding_sim_par.R:                                                 #
 #       -Sets parameter inputs for the simulation                              #
 #   (2) confounding_sim_script.R:                                              #
-#       -Generates and analyzes data and stores results                        #
+#       -Generates and analyzes data and returns results                       #
 #   (3) confounding_sim_run.R:                                                 #
 #       -Runs simulation and stores results                                    #                                                              
 #******************************************************************************#
