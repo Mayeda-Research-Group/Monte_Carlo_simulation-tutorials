@@ -92,9 +92,9 @@ collider_sim <- function(){
   #Calculate the proportion of people with outcome (Y) = 1
   
   mean_U <- mean(obs$U)
-  p_A <- sum(obs$A)/samp_size
-  p_S <- sum(obs$S)/samp_size
-  p_Y <- sum(obs$Y)/samp_size 
+  p_A <- mean(obs$A)
+  p_S <- mean(obs$S)
+  p_Y <- mean(obs$Y)
   
   #Check proportion of people with selection (S) = 1 by exposure (A)
   p_S_A0 <- obs %>% filter(A == 0) %>% mean(.$S)
