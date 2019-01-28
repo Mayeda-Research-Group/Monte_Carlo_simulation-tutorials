@@ -145,6 +145,16 @@ collider_sim <- function(){
   ci_95_selected <- exp(confint(sel_model, "A", level = 0.95))
   ub_OR_AY_S1 <- ci_95_selected[["97.5 %"]]
   lb_OR_AY_S1 <- ci_95_selected[["2.5 %"]]
-  return(c(sel_OR, ci_95))
+  
+  #Values to return
+  return(c("OR_AY_S1" = OR_AY_S1, "OR_AY_all" = OR_AY_all, "mean_U" = mean_U, 
+           "mean_U_A1_all" = mean_U_A1_all, "mean_U_A0_all" = mean_U_A0_all, 
+           "mean_U_A1_S1" = mean_U_A1_S1, "mean_U_A0_S1" = mean_U_A0_S1, 
+           "p_A" = p_A, "p_Y" = p_Y, "p_S" = p_S, "p_S_A1" = p_S_A1, 
+           "p_S_A0" = p_S_A0, "p_Y_A0" = p_Y_A0, "p_Y_A1" = p_Y_A1, 
+           "p_Y_A0_S1" = p_Y_A0_S1, "p_Y_A1_S1" = p_Y_A1_S1, 
+           "OR_AY_all" = OR_AY_all, "ub_OR_AY_all" = ub_OR_AY_all, 
+           "lb_OR_AY_all" = lb_OR_AY_all, "OR_AY_S1" = OR_AY_S1, 
+           "ub_OR_AY_S1" = ub_OR_AY_S1, "lb_OR_AY_S1" = lb_OR_AY_S1))
 }
 
