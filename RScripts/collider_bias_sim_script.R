@@ -97,7 +97,37 @@ collider_sim <- function(){
   p_Y <- mean(obs$Y)
   
   #Check proportion of people with selection (S) = 1 by exposure (A)
-  p_S_A0 <- obs %>% filter(A == 0) %>% mean(.$S)
+  #Save as a scalar (rather than a 1 x 1 dataframe)
+  p_S_A0 <- obs %>% filter(A == 0) %>% summarise_at("S", mean) %>% as.numeric()
+  p_S_A1 <- obs %>% filter(A == 1) %>% summarise_at("S", mean) %>% as.numeric()
+  
+  #Check proportion of people with outcome (Y) = 1 by exposure (A)
+  #Save as a scalar (rather than a 1 x 1 dataframe)
+  p_Y_A0 <- obs %>% filter(A == 0) %>% summarise_at("Y", mean) %>% as.numeric()
+  p_Y_A1 <- obs %>% filter(A == 1) %>% summarise_at("Y", mean) %>% as.numeric()
+  
+  #Check proportion of people with outcome (Y) = 1 by exposure (A) among S = 1
+  #Save as a scalar (rather than a 1 x 1 dataframe)
+  p_Y_A0_S1 <- obs %>% filter(A == 0 & S == 1) %>% summarise_at("Y", mean) %>% 
+    as.numeric()
+  p_Y_A1_S1 <- obs %>% filter(A == 1 & S == 1) %>% summarise_at("Y", mean) %>% 
+    as.numeric()
+  
+  #Look at mean U by A
+  #Save as a scalar (rather than a 1 x 1 dataframe)
+  mean_U_A0_all <- obs %>% filter(A == 0) %>% summarise_at("U", mean) %>% 
+    as.numeric()
+  mean_U_A1_all <- obs %>% filter(A == 1) %>% summarise_at("U", mean) %>% 
+    as.numeric()
+  
+  #Look at mean U by A among S = 1
+  #Save as a scalar (rather than a 1 x 1 dataframe)
+  mean_U_A0_S1 <- obs %>% filter(A == 0 & S == 1) %>% 
+    summarise_at("U", mean) %>% as.numeric()
+  mean_U_A1_S1 <- obs %>% filter(A == 1 & S == 1) %>% 
+    summarise_at("U", mean) %>% as.numeric()
+  
+  #---- Look at associations and return results ----
   
   #Estimates of primary interest:  Estimated ORs for A and Y among S = 1
   #Store ORs and 95% CI limits
