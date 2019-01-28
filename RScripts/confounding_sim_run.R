@@ -21,12 +21,20 @@
 #******************************************************************************#
 
 #******************************************************************************#
-# Package quick reference and resources
-#   -pacman
-#   -here
-#   -tidyverse
-#   -magrittr
-#
+# Package quick reference and resources                                        #
+#                                                                              #
+# pacman: clean way to import many R packages at one time                      #
+#         (https://www.rdocumentation.org/packages/pacman/versions/0.5.0)      #
+#                                                                              #
+# here: prevents the issues associated with specifying file paths              #
+#       (https://www.rdocumentation.org/packages/here/versions/0.1)            #
+#                                                                              #
+# tidyverse: a suite of data wrangling, analysis, and visualization packages   #
+#            (https://www.rdocumentation.org/packages/tidyverse/versions/1.2.1)#
+#                                                                              #
+# magrittr: contains the %<>% (double pipe) which allows efficient             #
+#           reassignment/replacement of newly created objects to old ones      #
+#           (https://www.rdocumentation.org/packages/magrittr/versions/1.5)    #
 #******************************************************************************#
 
 #---- Package Loading and Options ----
@@ -38,7 +46,6 @@ p_load("here", "tidyverse", "magrittr")
 set.seed(20190130)
 
 #Using standard notation (as opposed to scientific), 
-#Rounded to two decimal places
 options(scipen = 999)
 
 #---- Source Files ----
@@ -168,26 +175,27 @@ ggsave(filename = here("Plots", "plot_est_OR_CI_crude.jpeg"),
 #---- Save results as .csv ----
 write_csv(sim_data, here("Data", "confounding_results_each_replication.csv"))
 
+#---- Display numerical results ----
+#Across B replications, average mean value of U, 
+#proportion of people with exposure = 1, proportion of people with outcome = 1
+mean_results[c("mean_U", "p_exposure", "p_outcome")]
 
-#---- old code ----
+#Across B replications, average estimated OR for exposure on outcome, 
+#adjusting for U
+mean_results["OR_exposure_Uyes"]
 
-#            /*List results */
-#            *Across B replications, average mean value of U, proportion of people with exposure=1, proportion of people with outcome=1
-#            scalar list mean_mean_U mean_p_exposure mean_p_outcome
-#            
-#            *Across B replications, average estimated OR for exposure on outcome, adjusting for U
-#            scalar list mean_OR_exposure_Uyes
-#            
-#            *Across B replications, average estimated OR for exposure on outcome, not adjusting for U
-#            scalar list mean_OR_exposure_Uno
-#            
-#            *Proportion of 95% CIs for OR for exposure on outcome that include the causal/true OR 
-#            scalar list P_covg_OR_exposure_Uyes P_covg_OR_exposure_Uno 
-#            
-#            
+#Across B replications, average estimated OR for exposure on outcome, 
+#not adjusting for U
+mean_results["OR_exposure_Uno"]
+
+#Proportion of 95% CIs for OR for exposure on outcome that include the 
+#causal/true OR 
+
+coverage_prob
+
 #End timer
 stop_time <- Sys.time()
 
-#Display run time
+#---- Display run time ----
 stop_time - start_time
            
