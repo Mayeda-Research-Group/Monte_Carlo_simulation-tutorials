@@ -128,11 +128,36 @@ ggsave(filename = here("Plots", "CI_95_plot.jpeg"),
 #---- Save results as .csv ----
 
 #---- Display numerical results ----
+#Check proportions of people with: 
+# exposure (A) = 1
+# selection (S) = 1
+# outcome (Y) = 1
+# outcome (Y) = 1 by exposure (A)
+mean_results[c("p_A", "p_S", "p_Y", "p_Y_A1", "p_Y_A0", "mean_U")]
 
+#Check proportion of people with outcome (Y) = 1 by exposure (A) among S = 1
+mean_results[c("p_Y_A1_S1", "p_Y_A0_S1")]
+
+#Check distribution of U by A among S = 1
+mean_results[c("mean_U_A1_S1", "mean_U_A0_S1")]
+
+#Check distribution of U by A among full sample
+mean_results[c("mean_U_A1_all", "mean_U_A0_all")]
+
+#Check ORs and 95% CI coverage in whole population (no bias anticipated)
+mean_results["OR_AY_all"]
+coverage_prob["covg_OR_AY_all"]
+
+#Estimate of primary interest: Estimated ORs among S = 1
+mean_results["OR_AY_S1"]
+
+#Proportion of 95% CIs that include the causal/true OR 95% CI coverage
+coverage_prob["covg_OR_AY_S1"]
+
+#---- Display run time ----
 #End timer
 stop_time <- Sys.time()
 
-#---- Display run time ----
 stop_time - start_time
 
 
