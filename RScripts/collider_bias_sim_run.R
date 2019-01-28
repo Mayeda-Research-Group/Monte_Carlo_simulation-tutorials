@@ -56,6 +56,10 @@ source(here("RScripts", "collider_bias_sim_script.R"))  #simulation script
 #Start timer
 start_time <- Sys.time()
 
+#Create variable for causal/true ORs for A on Y specified in data generation 
+#and analysis file 
+causal_OR_AY = 1.0
+
 #Run simulation 
 #   supressMessages hides messages from fitting the logistic regression
 #   %>% is a "pipe"... it feeds the output of one command to the next
@@ -65,10 +69,31 @@ start_time <- Sys.time()
 sim_data <- suppressMessages(replicate(B, collider_sim())) %>% t() %>%
   as.data.frame()
 
-#Finding the  average estimated OR and 95% CI coverage 
-avg_OR <- conf_ints %>% summarize_at("A", mean)
-coverage <- conf_ints %>% mutate(capture = L < 1 & U > 1) %>%  
-  summarize_at("capture", mean)
+#---- Numerical summaries ----
+#Across B replications, calculate and store mean value of selected variables 
+#Round to three decimal places
+
+mean_results <- sim_data %>% 
+  select("OR_AY_S1", "OR_AY_all", "mean_U", "mean_U_A1_all", "mean_U_A0_all", 
+         "mean_U_A1_S1", "mean_U_A0_S1", "p_A", "p_Y", "p_S", "p_S_A1", 
+         "p_S_A0", "p_Y_A0", "p_Y_A1", "p_Y_A0_S1", "p_Y_A1_S1") %>%
+  colMeans() %>% round(3)
+
+#For each replication, generate indicator variable for whether the 95% CI for 
+#the OR includes the causal/true OR
+#Appends this to the simulation results dataset
+sim_data %<>% 
+  mutate("covg_OR_AY_S1" = 
+           if_else(ub_OR_AY_S1 > causal_OR_AY & 
+                     lb_OR_AY_S1 < causal_OR_AY, 1, 0), 
+         "covg_OR_AY_all" = 
+           if_else(ub_OR_AY_all > causal_OR_AY & 
+                     lb_OR_AY_all < causal_OR_AY, 1, 0))
+
+#Average coverage probabilities across B replications
+coverage_prob <- sim_data %>% 
+  select("covg_OR_AY_S1", "covg_OR_AY_all") %>% 
+  colMeans(., na.rm = TRUE) %>% round(3)
 
 #---- Produce and save plots ----
 plot_title <- paste("Average OR for Selected = ", 
