@@ -16,7 +16,7 @@
 #******************************************************************************#
 
 #******************************************************************************#
-# This file generates and analyzes data and stores the parameter estimates for #
+# This file generates and analyzes data and returns the parameter estimates for#
 # one iteration of sample generation.                                          #
 #******************************************************************************#
 
