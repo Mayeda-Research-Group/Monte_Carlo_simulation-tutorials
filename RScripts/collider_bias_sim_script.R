@@ -153,8 +153,7 @@ collider_sim <- function(){
            "p_A" = p_A, "p_Y" = p_Y, "p_S" = p_S, "p_S_A1" = p_S_A1, 
            "p_S_A0" = p_S_A0, "p_Y_A0" = p_Y_A0, "p_Y_A1" = p_Y_A1, 
            "p_Y_A0_S1" = p_Y_A0_S1, "p_Y_A1_S1" = p_Y_A1_S1, 
-           "OR_AY_all" = OR_AY_all, "ub_OR_AY_all" = ub_OR_AY_all, 
-           "lb_OR_AY_all" = lb_OR_AY_all, "OR_AY_S1" = OR_AY_S1, 
+           "ub_OR_AY_all" = ub_OR_AY_all, "lb_OR_AY_all" = lb_OR_AY_all,  
            "ub_OR_AY_S1" = ub_OR_AY_S1, "lb_OR_AY_S1" = lb_OR_AY_S1))
 }
 
