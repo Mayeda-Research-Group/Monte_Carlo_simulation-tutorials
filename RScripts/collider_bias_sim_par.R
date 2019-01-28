@@ -26,8 +26,8 @@
 #******************************************************************************#
 #                             SET PARAMETERS                                   #
 #******************************************************************************#
-#---- Specify the model parameters ----
-samp_size <- 5000
+B = 1000         #number of iterations of sample generation
+num_obs = 5000   #number of observations in each sample
 
 #Specify the prevalence of A (exposure)
 p_A <- 0.2
