@@ -101,8 +101,8 @@ confounding_sim <- function(){
   #Estimated OR & 95% CI for exposure-outcome association
   #Adjusting for U (confounder)
   #supressMessages hides messages from the glm function
-  model_U_yes <- suppressMessages(glm(outcome ~ exposure + U, 
-                                      family = binomial(), data = dataset))
+  model_U_yes <- glm(outcome ~ exposure + U, family = binomial(), 
+                     data = dataset)
   
   OR_exposure_Uyes <- exp(model_U_yes$coefficients[["exposure"]])
   ci_95_Uyes <- exp(confint(model_U_yes, "exposure", level = 0.95))
@@ -111,8 +111,8 @@ confounding_sim <- function(){
   
   #Estimated OR & 95% CI for exposure-outcome association
   #Without adjusting for U (confounder)
-  model_U_no <- suppressMessages(glm(outcome ~ exposure, 
-                                     family = binomial(), data = dataset))
+  model_U_no <- glm(outcome ~ exposure, family = binomial(), 
+                    data = dataset)
   
   OR_exposure_Uno <- exp(model_U_no$coefficients[["exposure"]])
   ci_95_Uno <- exp(confint(model_U_no, "exposure", level = 0.95))
