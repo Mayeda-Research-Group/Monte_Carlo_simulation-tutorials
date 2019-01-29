@@ -96,36 +96,118 @@ coverage_prob <- sim_data %>%
   colMeans(., na.rm = TRUE) %>% round(3)
 
 #---- Visualizations ----
-plot_title <- paste("Average OR for Selected = ", 
-                    round(avg_OR, 2), "; ",   
-                    round(coverage*100, 0), 
-                    "% of 95% CI include the true OR = 1", 
-                    sep = "")
-CI_plot <- 
-  ggplot(data = conf_ints, aes(x = seq(from = 1, to = nrow(conf_ints), by = 1), 
-                               y = A)) + 
+#Generate plots of estimated OR and 95% CI across B simulated samples
+#Plot estimated OR for selected
+plot_title_S1 <- paste("Average OR for Selected (S = 1) = ", 
+                        mean_results[["OR_AY_S1"]], "; ",   
+                        round(coverage_prob[["covg_OR_AY_S1"]]*100, 0), 
+                        "% of 95% CI include the true OR = 1", 
+                        sep = "")
+plot_subtitle_S1 <- paste("Results based on ", B, " simulated samples", 
+                           sep = "")
+
+#For y-axis scaling
+min_y <- min(sim_data$lb_OR_AY_S1, na.rm = TRUE)
+max_y <- max(sim_data$ub_OR_AY_S1, na.rm = TRUE)
+
+CI_S1_plot <- 
+  ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
+                              y = OR_AY_S1)) + 
   geom_errorbar(width = 10, alpha = 0.5, color = "#A9A9A9",
-                ymin = conf_ints$L, ymax = conf_ints$U) +
+                ymin = sim_data$lb_OR_AY_S1, 
+                ymax = sim_data$ub_OR_AY_S1) +
   geom_point(size = 2, alpha = 0.75) +
   geom_hline(aes(yintercept = 1), size = 1.5) + 
-  geom_hline(aes(yintercept = avg_OR), size = 1.5, lty = 2, alpha = 0.75, 
-             color = "#4ABDAC") +
-  labs(x = " ", 
-       y = TeX("$\\widehat{OR}_{AY|S = 1}$")) +
+  geom_hline(aes(yintercept = mean_results[["OR_AY_S1"]]), size = 1.5, 
+             lty = 2, alpha = 0.75, color = "#4ABDAC") +
   theme_minimal() + 
-  ggtitle(plot_title) + 
+  labs(title = plot_title_S1, 
+       subtitle = plot_subtitle_S1) + 
+  ylab("Estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(0.2, 1.5), 
-                     breaks = c(seq(from = 0.2, to = 1.5, by = 0.2))) + 
+  scale_y_continuous(limits = c(min_y, max_y), 
+                     breaks = c(seq(from = min_y, to = max_y, 
+                                    by = 0.25))) + 
   scale_x_continuous(breaks = NULL)
-  
 
-ggsave(filename = here("Plots", "CI_95_plot.jpeg"), 
-                       plot = CI_plot, width = 8, height = 6, dpi = 300, 
-                       units = "in", device = 'jpeg')
+ggsave(filename = here("Plots", "plot_est_OR_CI_S1.jpeg"), 
+       plot = CI_S1_plot, width = 8, height = 6, dpi = 300, units = "in", 
+       device = 'jpeg')                            
+
+#Generate plots of estimated OR and 95% CI across B simulated samples
+#Plot estimated OR for total population
+plot_title_all <- paste("Average crude OR = ", 
+                       mean_results[["OR_AY_all"]], "; ",   
+                       round(coverage_prob[["covg_OR_AY_all"]]*100, 0), 
+                       "% of 95% CI include the true OR = 1", 
+                       sep = "")
+plot_subtitle_all <- paste("Results based on ", B, " simulated samples", 
+                          sep = "")
+
+#For y-axis scaling
+min_y <- min(sim_data$lb_OR_AY_all, na.rm = TRUE)
+max_y <- max(sim_data$ub_OR_AY_all, na.rm = TRUE)
+
+CI_all_plot <- 
+  ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
+                              y = OR_AY_all)) + 
+  geom_errorbar(width = 10, alpha = 0.5, color = "#A9A9A9",
+                ymin = sim_data$lb_OR_AY_all, 
+                ymax = sim_data$ub_OR_AY_all) +
+  geom_point(size = 2, alpha = 0.75) +
+  geom_hline(aes(yintercept = 1), size = 1.5) + 
+  geom_hline(aes(yintercept = mean_results[["OR_AY_all"]]), size = 1.5, 
+             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  theme_minimal() + 
+  labs(title = plot_title_all, 
+       subtitle = plot_subtitle_all) + 
+  ylab("Estimated OR (95% CI)") + xlab("") +
+  theme(plot.title = element_text(size = 15)) + 
+  theme(axis.title.y = element_text(size = 12)) + 
+  scale_y_continuous(limits = c(min_y, max_y), 
+                     breaks = c(seq(from = min_y, to = max_y, 
+                                    by = 0.25))) + 
+  scale_x_continuous(breaks = NULL)
+
+ggsave(filename = here("Plots", "plot_est_OR_CI_all.jpeg"), 
+       plot = CI_all_plot, width = 8, height = 6, dpi = 300, units = "in", 
+       device = 'jpeg')
+
+#Make a long dataset for histogram plotting
+hist_data <- sim_data %>% 
+  select(mean_U_A0_all, mean_U_A1_all, mean_U_A0_S1, mean_U_A1_S1) %>% 
+  gather()
+
+#Plot mean U across the B iterations of sample generation by S and overall
+#Plot for S = 1
+U_hist_S1 <- 
+  ggplot(data = hist_data %>% 
+           filter(key == "mean_U_A0_S1" | key == "mean_U_A1_S1"), 
+         aes(x = value, fill = key)) + geom_histogram() + theme_minimal() +
+  scale_fill_manual(name = "", values = c("#A9A9A9", "#4ABDAC"), 
+                    labels = c("A = 0","A = 1")) + xlab("mean U") + 
+  ggtitle("Distributions of mean U for Selected (S = 1)")
+
+ggsave(filename = here("Plots", "histogram_S1.jpeg"), 
+       plot = U_hist_S1, width = 8, height = 6, dpi = 300, units = "in", 
+       device = 'jpeg')
+
+#Plot for whole population
+U_hist_all <- 
+  ggplot(data = hist_data %>% 
+           filter(key == "mean_U_A0_all" | key == "mean_U_A1_all"), 
+         aes(x = value, fill = key)) + geom_histogram() + theme_minimal() +
+  scale_fill_manual(name = "", values = c("#A9A9A9", "#4ABDAC"), 
+                    labels = c("A = 0","A = 1")) + xlab("mean U") + 
+  ggtitle("Distributions of mean U for population")
+
+ggsave(filename = here("Plots", "histogram_all.jpeg"), 
+       plot = U_hist_all, width = 8, height = 6, dpi = 300, units = "in", 
+       device = 'jpeg')
 
 #---- Save results as .csv ----
+write_csv(sim_data, here("Data", "collider_bias_results_each_replication.csv"))
 
 #---- Display numerical results ----
 #Check proportions of people with: 
