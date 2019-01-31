@@ -98,6 +98,7 @@ coverage_prob <- sim_data %>%
 #---- Visualizations ----
 #Generate plots of estimated OR and 95% CI across B simulated samples
 #Plot estimated OR for selected
+
 plot_title_S1 <- paste("Average OR for Selected (S = 1) = ", 
                         mean_results[["OR_AY_S1"]], "; ",   
                         round(coverage_prob[["covg_OR_AY_S1"]]*100, 0), 
@@ -105,10 +106,6 @@ plot_title_S1 <- paste("Average OR for Selected (S = 1) = ",
                         sep = "")
 plot_subtitle_S1 <- paste("Results based on ", B, " simulated samples", 
                            sep = "")
-
-#For y-axis scaling
-min_y <- min(sim_data$lb_OR_AY_S1, na.rm = TRUE)
-max_y <- max(sim_data$ub_OR_AY_S1, na.rm = TRUE)
 
 CI_S1_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
@@ -126,9 +123,9 @@ CI_S1_plot <-
   ylab("Estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(min_y, max_y), 
-                     breaks = c(seq(from = min_y, to = max_y, 
-                                    by = 0.25))) + 
+  scale_y_continuous(limits = c(0.2, 2), 
+                     breaks = c(seq(from = 0.2, to = 2, 
+                                    by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Plots", "plot_est_OR_CI_S1.jpeg"), 
@@ -144,10 +141,6 @@ plot_title_all <- paste("Average crude OR = ",
                        sep = "")
 plot_subtitle_all <- paste("Results based on ", B, " simulated samples", 
                           sep = "")
-
-#For y-axis scaling
-min_y <- min(sim_data$lb_OR_AY_all, na.rm = TRUE)
-max_y <- max(sim_data$ub_OR_AY_all, na.rm = TRUE)
 
 CI_all_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
@@ -165,9 +158,9 @@ CI_all_plot <-
   ylab("Estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(min_y, max_y), 
-                     breaks = c(seq(from = min_y, to = max_y, 
-                                    by = 0.25))) + 
+  scale_y_continuous(limits = c(0.2, 2), 
+                     breaks = c(seq(from = 0.2, to = 2, 
+                                    by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Plots", "plot_est_OR_CI_all.jpeg"), 

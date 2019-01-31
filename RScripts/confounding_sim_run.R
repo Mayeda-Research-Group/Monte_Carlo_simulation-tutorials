@@ -104,10 +104,6 @@ plot_title_adj <- paste("Average OR for U-adjusted = ",
 plot_subtitle_adj <- paste("Results based on ", B, " simulated samples", 
                            sep = "")
 
-#For y-axis scaling
-min_y <- min(sim_data$lb_OR_exposure_Uyes, na.rm = TRUE)
-max_y <- max(sim_data$ub_OR_exposure_Uyes, na.rm = TRUE)
-
 CI_adjusted_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
                               y = OR_exposure_Uyes)) + 
@@ -124,9 +120,9 @@ CI_adjusted_plot <-
   ylab("OR of exposure") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(min_y, max_y), 
-                     breaks = c(seq(from = min_y, to = max_y, 
-                                    by = 0.25))) + 
+  scale_y_continuous(limits = c(0.6, 2.8), 
+                     breaks = c(seq(from = 0.6, to = 3, 
+                                    by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Plots", "plot_est_OR_CI_adj.jpeg"), 
@@ -142,10 +138,6 @@ plot_title_unadj <- paste("Average crude OR = ",
                     sep = "")
 plot_subtitle_unadj <- paste("Results based on ", B, " simulated samples", 
                              sep = "")
-
-#For y-axis scaling
-min_y <- min(sim_data$lb_OR_exposure_Uno, na.rm = TRUE)
-max_y <- max(sim_data$ub_OR_exposure_Uno, na.rm = TRUE)
 
 CI_unadjusted_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
@@ -163,9 +155,9 @@ CI_unadjusted_plot <-
   ylab("OR of exposure") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(min_y, max_y), 
-                     breaks = c(seq(from = min_y, to = max_y, 
-                                    by = 0.25))) + 
+  scale_y_continuous(limits = c(0.6, 2.8), 
+                     breaks = c(seq(from = 0.6, to = 2.8, 
+                                    by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Plots", "plot_est_OR_CI_crude.jpeg"), 
