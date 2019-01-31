@@ -1,7 +1,7 @@
 #******************************************************************************#
-# SER 2019: Using Using Monte Carlo Simulations for Quantitative Bias Analysis #
-# February ___, 2019                                                           #
-# Crystal Shaw                                                                 #
+# Using Using Monte Carlo Simulations for Quantitative Bias Analysis           #
+# Date                                                                         #
+# Crystal Shaw, PhD Student UCLA department of Biostatistics                   #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
 # Simulation example: Bias from unmeasured confounding                         #

@@ -1,7 +1,7 @@
 #******************************************************************************#
 # Using Using Monte Carlo Simulations for Quantitative Bias Analysis           #
 # Date                                                                         #
-# Crystal Shaw                                                                 #
+# Crystal Shaw, PhD Student UCLA department of Biostatistics                   #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
 # Simulation example: Bias from unmeasured confounding                         #

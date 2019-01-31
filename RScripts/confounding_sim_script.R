@@ -1,7 +1,7 @@
 #******************************************************************************#
-# SER 2019: Using Using Monte Carlo Simulations for Quantitative Bias Analysis #
-# February ___, 2019                                                           #
-# Crystal Shaw                                                                 #
+# Using Using Monte Carlo Simulations for Quantitative Bias Analysis           #
+# Date                                                                         #
+# Crystal Shaw, PhD Student UCLA department of Biostatistics                   #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
 # Simulation example: Bias from unmeasured confounding                         #
@@ -100,7 +100,6 @@ confounding_sim <- function(){
   
   #Estimated OR & 95% CI for exposure-outcome association
   #Adjusting for U (confounder)
-  #supressMessages hides messages from the glm function
   model_U_yes <- glm(outcome ~ exposure + U, family = binomial(), 
                      data = dataset)
   
