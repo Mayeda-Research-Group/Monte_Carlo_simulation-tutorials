@@ -117,7 +117,7 @@ CI_adjusted_plot <-
   theme_minimal() + 
   labs(title = plot_title_adj, 
        subtitle = plot_subtitle_adj) + 
-  ylab("OR of exposure") + xlab("") +
+  ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
   scale_y_continuous(limits = c(0.6, 2.8), 
@@ -152,7 +152,7 @@ CI_unadjusted_plot <-
   theme_minimal() + 
   labs(title = plot_title_unadj, 
        subtitle = plot_subtitle_unadj) + 
-  ylab("OR of exposure") + xlab("") +
+  ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
   scale_y_continuous(limits = c(0.6, 2.8), 

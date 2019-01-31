@@ -120,7 +120,7 @@ CI_S1_plot <-
   theme_minimal() + 
   labs(title = plot_title_S1, 
        subtitle = plot_subtitle_S1) + 
-  ylab("Estimated OR (95% CI)") + xlab("") +
+  ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
   scale_y_continuous(limits = c(0.2, 2), 
@@ -155,7 +155,7 @@ CI_all_plot <-
   theme_minimal() + 
   labs(title = plot_title_all, 
        subtitle = plot_subtitle_all) + 
-  ylab("Estimated OR (95% CI)") + xlab("") +
+  ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
   scale_y_continuous(limits = c(0.2, 2), 
