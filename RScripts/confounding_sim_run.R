@@ -96,12 +96,14 @@ coverage_prob <- sim_data %>%
 #---- Visualizations ----
 #Generate plots of estimated OR and 95% CI across B simulated samples
 #Plot estimated OR adjusted for U
-plot_title_adj <- paste("Average OR for U-adjusted = ", 
-                    mean_results[["OR_exposure_Uyes"]], "; ",   
-                    round(coverage_prob[["covg_OR_exposure_Uyes"]]*100, 0), 
-                    "% of 95% CI include the true OR = 1", 
-                    sep = "")
-plot_subtitle_adj <- paste("Results based on ", B, " simulated samples", 
+plot_title_adj <- 
+  paste("Estimated adjusted OR and 95% CI from", B, "simulated samples", 
+        sep = " ")
+
+plot_subtitle_adj <- paste("mean estimated OR = ", 
+                           mean_results[["OR_exposure_Uyes"]], 
+                           "; 95% CI coverage probability = ", 
+                           coverage_prob[["covg_OR_exposure_Uyes"]],
                            sep = "")
 
 CI_adjusted_plot <- 
@@ -131,13 +133,15 @@ ggsave(filename = here("Plots", "plot_est_OR_CI_adj.jpeg"),
 
 #Generate plots of estimated OR and 95% CI across B simulated samples
 #Plot estimated OR unadjusted for U
-plot_title_unadj <- paste("Average crude OR = ", 
-                    mean_results[["OR_exposure_Uno"]], "; ",   
-                    round(coverage_prob[["covg_OR_exposure_Uno"]]*100, 0), 
-                    "% of 95% CI include the true OR = 1", 
-                    sep = "")
-plot_subtitle_unadj <- paste("Results based on ", B, " simulated samples", 
-                             sep = "")
+plot_title_unadj <- 
+  paste("Estimated crude OR and 95% CI from", B, "simulated samples", 
+        sep = " ")
+
+plot_subtitle_unadj <- paste("mean estimated OR = ", 
+                           mean_results[["OR_exposure_Uno"]], 
+                           "; 95% CI coverage probability = ", 
+                           coverage_prob[["covg_OR_exposure_Uno"]],
+                           sep = "")
 
 CI_unadjusted_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 

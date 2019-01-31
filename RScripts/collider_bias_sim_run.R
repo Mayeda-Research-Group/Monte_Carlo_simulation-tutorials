@@ -98,14 +98,15 @@ coverage_prob <- sim_data %>%
 #---- Visualizations ----
 #Generate plots of estimated OR and 95% CI across B simulated samples
 #Plot estimated OR for selected
+plot_title_S1 <- paste("Memory complaints = 1: Estimated OR and 95% CI from", 
+                       B, "simulated samples", 
+                       sep = " ")
 
-plot_title_S1 <- paste("Average OR for Selected (S = 1) = ", 
-                        mean_results[["OR_AY_S1"]], "; ",   
-                        round(coverage_prob[["covg_OR_AY_S1"]]*100, 0), 
-                        "% of 95% CI include the true OR = 1", 
-                        sep = "")
-plot_subtitle_S1 <- paste("Results based on ", B, " simulated samples", 
-                           sep = "")
+plot_subtitle_S1 <- paste("mean estimated OR = ", 
+                          mean_results[["OR_AY_S1"]], 
+                          "; 95% CI coverage probability = ", 
+                          coverage_prob[["covg_OR_AY_S1"]],
+                          sep = "")
 
 CI_S1_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
@@ -129,18 +130,19 @@ CI_S1_plot <-
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Plots", "plot_est_OR_CI_S1.jpeg"), 
-       plot = CI_S1_plot, width = 8, height = 6, dpi = 300, units = "in", 
+       plot = CI_S1_plot, width = 8.25, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')                            
 
 #Generate plots of estimated OR and 95% CI across B simulated samples
 #Plot estimated OR for total population
-plot_title_all <- paste("Average crude OR = ", 
-                       mean_results[["OR_AY_all"]], "; ",   
-                       round(coverage_prob[["covg_OR_AY_all"]]*100, 0), 
-                       "% of 95% CI include the true OR = 1", 
-                       sep = "")
-plot_subtitle_all <- paste("Results based on ", B, " simulated samples", 
-                          sep = "")
+plot_title_all <- paste("Whole population: Estimated OR and 95% CI from", 
+                        B, "simulated samples", 
+                        sep = " ")
+
+plot_subtitle_all <- paste("mean estimated OR = ", 
+                           mean_results[["OR_AY_all"]], 
+                           "; 95% CI coverage probability = ", 
+                           coverage_prob[["covg_OR_AY_all"]], sep = "")
 
 CI_all_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
