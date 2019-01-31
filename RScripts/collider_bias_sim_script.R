@@ -48,6 +48,10 @@ p_load("tidyverse")
 #Using standard notation (as opposed to scientific)
 options(scipen = 999)
 
+#For multiple iterations of sample generation, the seed is set in the 
+#collider_bias_sim_run.R simulation file
+#set.seed(4418)
+
 #---- Custom Functions ----
 #Probability of selection
 p_S <- function(A, U){
