@@ -195,31 +195,50 @@ ggsave(filename = here("Plots", "plot_est_OR_CI_all.jpeg"),
 #Make a long dataset for histogram plotting
 hist_data <- sim_data %>% 
   select(mean_U_A0_all, mean_U_A1_all, mean_U_A0_S1, mean_U_A1_S1) %>% 
-  gather()
+  gather() %>% mutate_at("key", as.factor)
+
+#Releveling factors for ggplot legend order
+hist_data$key <- fct_relevel(hist_data$key, "mean_U_A1_S1")
 
 #Plot mean U across the B iterations of sample generation by S and overall
 #Plot for S = 1
 U_hist_S1 <- 
   ggplot(data = hist_data %>% 
            filter(key == "mean_U_A0_S1" | key == "mean_U_A1_S1"), 
-         aes(x = value, fill = key)) + geom_histogram(aes(y=..density..)) + 
-  theme_minimal() +
-  scale_fill_manual(name = "", values = c("#A9A9A9", "#4ABDAC"), 
-                    labels = c("A = 0","A = 1")) + xlab("mean U") + 
-  ggtitle("Distributions of mean U for Selected (S = 1)")
+         aes(x = value, fill = key)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.01) + 
+  theme_minimal() + 
+  theme(legend.position = "bottom") + 
+  scale_fill_manual(name = "", values = c("#4ABDAC", "#A9A9A9"), 
+                    labels = c("anxiety = 1","anxiety = 0")) + xlab("") +
+  scale_x_continuous(limits = c(-0.2, 1.2), 
+                     breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
+  scale_y_continuous(limits = c(0, 25), 
+                     breaks = c(seq(from = 0, to = 25, by = 5))) + 
+  ggtitle("memory complaints = 1")
 
 ggsave(filename = here("Plots", "histogram_S1.jpeg"), 
        plot = U_hist_S1, width = 8, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')
 
 #Plot for whole population
+
+#Releveling factors for ggplot legend order
+hist_data$key <- fct_relevel(hist_data$key, "mean_U_A1_all")
+
 U_hist_all <- 
   ggplot(data = hist_data %>% 
            filter(key == "mean_U_A0_all" | key == "mean_U_A1_all"), 
-         aes(x = value, fill = key)) + geom_histogram() + theme_minimal() +
-  scale_fill_manual(name = "", values = c("#A9A9A9", "#4ABDAC"), 
-                    labels = c("A = 0","A = 1")) + xlab("mean U") + 
-  ggtitle("Distributions of mean U for population")
+         aes(x = value, fill = key)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.01) + theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(name = "", values = c("#4ABDAC", "#A9A9A9"), 
+                    labels = c("anxiety = 1","anxiety = 0")) + xlab("") + 
+  scale_x_continuous(limits = c(-0.2, 1.2), 
+                     breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
+  scale_y_continuous(limits = c(0, 25), 
+                     breaks = c(seq(from = 0, to = 25, by = 5))) + 
+  ggtitle("Whole population")
 
 ggsave(filename = here("Plots", "histogram_all.jpeg"), 
        plot = U_hist_all, width = 8, height = 6, dpi = 300, units = "in", 
