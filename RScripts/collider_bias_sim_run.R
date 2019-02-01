@@ -108,6 +108,16 @@ plot_subtitle_S1 <- paste("mean estimated OR = ",
                           coverage_prob[["covg_OR_AY_S1"]],
                           sep = "")
 
+#To create horizontal lines in the plot with legend
+h_lines <- tibble(x = c(-Inf, Inf), "True OR" = causal_OR_AY, 
+                  "Estimated OR" = mean_results[["OR_AY_S1"]]) %>%
+  gather(key = "line_type", value = "value", 
+         c("True OR", "Estimated OR")) %>% 
+  mutate_at("line_type", as.factor)
+
+#Releveling factors for ggplot legend order
+h_lines$line_type <- fct_relevel(h_lines$line_type, "True OR")
+  
 CI_S1_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
                               y = OR_AY_S1)) + 
@@ -115,10 +125,13 @@ CI_S1_plot <-
                 ymin = sim_data$lb_OR_AY_S1, 
                 ymax = sim_data$ub_OR_AY_S1) +
   geom_point(size = 2, alpha = 0.75) +
-  geom_hline(aes(yintercept = 1), size = 1.5) + 
-  geom_hline(aes(yintercept = mean_results[["OR_AY_S1"]]), size = 1.5, 
-             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  geom_line(data = h_lines, aes(x, value, linetype = line_type, 
+                                color = line_type), size = 1.5) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+  scale_color_manual(values = c("black", "#4ABDAC")) + 
   theme_minimal() + 
+  theme(legend.background = element_rect("light gray"), 
+        legend.position = c(0.90, 0.875), legend.title = element_blank()) + 
   labs(title = plot_title_S1, 
        subtitle = plot_subtitle_S1) + 
   ylab("estimated OR (95% CI)") + xlab("") +
@@ -144,6 +157,13 @@ plot_subtitle_all <- paste("mean estimated OR = ",
                            "; 95% CI coverage probability = ", 
                            coverage_prob[["covg_OR_AY_all"]], sep = "")
 
+#To create horizontal lines in the plot with legend
+h_lines <- tibble(x = c(-Inf, Inf), "True OR" = causal_OR_AY, 
+                  "Estimated OR" = mean_results[["OR_AY_all"]]) %>%
+  gather(key = "line_type", value = "value", 
+         c("True OR", "Estimated OR")) %>% 
+  mutate_at("line_type", as.factor)
+
 CI_all_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
                               y = OR_AY_all)) + 
@@ -151,10 +171,13 @@ CI_all_plot <-
                 ymin = sim_data$lb_OR_AY_all, 
                 ymax = sim_data$ub_OR_AY_all) +
   geom_point(size = 2, alpha = 0.75) +
-  geom_hline(aes(yintercept = 1), size = 1.5) + 
-  geom_hline(aes(yintercept = mean_results[["OR_AY_all"]]), size = 1.5, 
-             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  geom_line(data = h_lines, aes(x, value, linetype = line_type, 
+                                color = line_type), size = 1.5) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  scale_color_manual(values = c("#4ABDAC", "black")) + 
   theme_minimal() + 
+  theme(legend.background = element_rect("light gray"), 
+        legend.position = c(0.90, 0.875), legend.title = element_blank()) +  
   labs(title = plot_title_all, 
        subtitle = plot_subtitle_all) + 
   ylab("estimated OR (95% CI)") + xlab("") +
@@ -179,7 +202,8 @@ hist_data <- sim_data %>%
 U_hist_S1 <- 
   ggplot(data = hist_data %>% 
            filter(key == "mean_U_A0_S1" | key == "mean_U_A1_S1"), 
-         aes(x = value, fill = key)) + geom_histogram() + theme_minimal() +
+         aes(x = value, fill = key)) + geom_histogram(aes(y=..density..)) + 
+  theme_minimal() +
   scale_fill_manual(name = "", values = c("#A9A9A9", "#4ABDAC"), 
                     labels = c("A = 0","A = 1")) + xlab("mean U") + 
   ggtitle("Distributions of mean U for Selected (S = 1)")

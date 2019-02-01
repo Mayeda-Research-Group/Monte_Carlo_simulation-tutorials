@@ -106,6 +106,13 @@ plot_subtitle_adj <- paste("mean estimated OR = ",
                            coverage_prob[["covg_OR_exposure_Uyes"]],
                            sep = "")
 
+#To create horizontal lines in the plot with legend
+h_lines <- tibble(x = c(-Inf, Inf), "True OR" = true_OR_exposure_outcome, 
+                  "Estimated OR" = mean_results[["OR_exposure_Uyes"]]) %>%
+  gather(key = "line_type", value = "value", 
+         c("True OR", "Estimated OR")) %>% 
+  mutate_at("line_type", as.factor)
+
 CI_adjusted_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
                               y = OR_exposure_Uyes)) + 
@@ -113,10 +120,13 @@ CI_adjusted_plot <-
                 ymin = sim_data$lb_OR_exposure_Uyes, 
                 ymax = sim_data$ub_OR_exposure_Uyes) +
   geom_point(size = 2, alpha = 0.75) +
-  geom_hline(aes(yintercept = 1), size = 1.5) + 
-  geom_hline(aes(yintercept = mean_results[["OR_exposure_Uyes"]]), size = 1.5, 
-             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  geom_line(data = h_lines, aes(x, value, linetype = line_type, 
+                                color = line_type), size = 1.5) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  scale_color_manual(values = c("#4ABDAC", "black")) + 
   theme_minimal() + 
+  theme(legend.background = element_rect("light gray"), 
+        legend.position = c(0.90, 0.875), legend.title = element_blank()) + 
   labs(title = plot_title_adj, 
        subtitle = plot_subtitle_adj) + 
   ylab("estimated OR (95% CI)") + xlab("") +
@@ -143,6 +153,12 @@ plot_subtitle_unadj <- paste("mean estimated OR = ",
                            coverage_prob[["covg_OR_exposure_Uno"]],
                            sep = "")
 
+h_lines <- tibble(x = c(-Inf, Inf), "True OR" = true_OR_exposure_outcome, 
+                  "Estimated OR" = mean_results[["OR_exposure_Uno"]]) %>%
+  gather(key = "line_type", value = "value", 
+         c("True OR", "Estimated OR")) %>% 
+  mutate_at("line_type", as.factor)
+
 CI_unadjusted_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
                               y = OR_exposure_Uno)) + 
@@ -150,10 +166,13 @@ CI_unadjusted_plot <-
                 ymin = sim_data$lb_OR_exposure_Uno, 
                 ymax = sim_data$ub_OR_exposure_Uno) +
   geom_point(size = 2, alpha = 0.75) +
-  geom_hline(aes(yintercept = 1), size = 1.5) + 
-  geom_hline(aes(yintercept = mean_results[["OR_exposure_Uno"]]), size = 1.5, 
-             lty = 2, alpha = 0.75, color = "#4ABDAC") +
+  geom_line(data = h_lines, aes(x, value, linetype = line_type, 
+                                color = line_type), size = 1.5) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  scale_color_manual(values = c("#4ABDAC", "black")) + 
   theme_minimal() + 
+  theme(legend.background = element_rect("light gray"), 
+        legend.position = c(0.90, 0.875), legend.title = element_blank()) + 
   labs(title = plot_title_unadj, 
        subtitle = plot_subtitle_unadj) + 
   ylab("estimated OR (95% CI)") + xlab("") +
