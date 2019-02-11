@@ -40,7 +40,7 @@
 if (!require("pacman")) 
   install.packages("pacman", repos='http://cran.us.r-project.org')
 
-p_load("here", "tidyverse", "latex2exp")
+p_load("here", "tidyverse", "latex2exp", "magrittr")
 
 #Using standard notation (as opposed to scientific)
 options(scipen = 999)
