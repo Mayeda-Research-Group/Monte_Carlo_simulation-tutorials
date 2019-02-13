@@ -215,7 +215,11 @@ U_hist_S1 <-
                      breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
   scale_y_continuous(limits = c(0, 25), 
                      breaks = c(seq(from = 0, to = 25, by = 5))) + 
-  ggtitle("memory complaints = 1")
+  labs(title = "memory complaints = 1: distribution of U", 
+       subtitle = paste0("mean U anxiety = 1 = ", 
+                         mean_results[["mean_U_A1_S1"]], 
+                         "; mean U anxiety = 0 = ", 
+                         mean_results[["mean_U_A0_S1"]]))
 
 ggsave(filename = here("Plots", "histogram_S1.jpeg"), 
        plot = U_hist_S1, width = 8, height = 6, dpi = 300, units = "in", 
@@ -238,7 +242,11 @@ U_hist_all <-
                      breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
   scale_y_continuous(limits = c(0, 25), 
                      breaks = c(seq(from = 0, to = 25, by = 5))) + 
-  ggtitle("Whole population")
+  labs(title = "whole population: distribution of U", 
+       subtitle = paste0("mean U anxiety = 1 = ", 
+                         mean_results[["mean_U_A1_all"]], 
+                         "; mean U anxiety = 0 = ", 
+                         mean_results[["mean_U_A0_all"]]))
 
 ggsave(filename = here("Plots", "histogram_all.jpeg"), 
        plot = U_hist_all, width = 8, height = 6, dpi = 300, units = "in", 
