@@ -70,11 +70,16 @@ sim_data <- suppressMessages(replicate(B, confounding_sim())) %>% t() %>%
   as.data.frame()
 
 #---- Numerical summaries ----
+#Take the log of the ORs so that mean are calculated correctly
+sim_data %<>% mutate("log_OR_exposure_Uyes" = log(OR_exposure_Uyes), 
+                     "log_OR_exposure_Uno" = log(OR_exposure_Uno))
+
 #Across B replications, calculate and store mean value of selected variables 
 #Round to two decimal places
 
 mean_results <- sim_data %>% select("mean_U", "p_exposure", "p_outcome", 
-                                    "OR_exposure_Uyes", "OR_exposure_Uno") %>%
+                                    "log_OR_exposure_Uyes", 
+                                    "log_OR_exposure_Uno") %>%
   colMeans() %>% round(2)
 
 #For each replication, generate indicator variable for whether the 95% CI for 
@@ -100,15 +105,17 @@ plot_title_adj <-
   paste("Estimated adjusted OR and 95% CI from", B, "simulated samples", 
         sep = " ")
 
-plot_subtitle_adj <- paste("mean estimated OR = ", 
-                           mean_results[["OR_exposure_Uyes"]], 
-                           "; 95% CI coverage probability = ", 
-                           coverage_prob[["covg_OR_exposure_Uyes"]],
-                           sep = "")
+plot_subtitle_adj <- 
+  paste("mean estimated OR = ", 
+        round(exp(mean_results[["log_OR_exposure_Uyes"]]), 2), 
+        "; 95% CI coverage probability = ", 
+        coverage_prob[["covg_OR_exposure_Uyes"]],
+        sep = "")
 
 #To create horizontal lines in the plot with legend
 h_lines <- tibble(x = c(-Inf, Inf), "True OR" = true_OR_exposure_outcome, 
-                  "Estimated OR" = mean_results[["OR_exposure_Uyes"]]) %>%
+                  "Estimated OR" = 
+                    round(exp(mean_results[["log_OR_exposure_Uyes"]])), 2) %>%
   gather(key = "line_type", value = "value", 
          c("True OR", "Estimated OR")) %>% 
   mutate_at("line_type", as.factor)
@@ -148,13 +155,14 @@ plot_title_unadj <-
         sep = " ")
 
 plot_subtitle_unadj <- paste("mean estimated OR = ", 
-                           mean_results[["OR_exposure_Uno"]], 
+                           round(exp(mean_results[["log_OR_exposure_Uno"]]), 2), 
                            "; 95% CI coverage probability = ", 
                            coverage_prob[["covg_OR_exposure_Uno"]],
                            sep = "")
 
 h_lines <- tibble(x = c(-Inf, Inf), "True OR" = true_OR_exposure_outcome, 
-                  "Estimated OR" = mean_results[["OR_exposure_Uno"]]) %>%
+                  "Estimated OR" = 
+                    round(exp(mean_results[["log_OR_exposure_Uno"]])), 2) %>%
   gather(key = "line_type", value = "value", 
          c("True OR", "Estimated OR")) %>% 
   mutate_at("line_type", as.factor)
@@ -197,11 +205,15 @@ mean_results[c("mean_U", "p_exposure", "p_outcome")]
 
 #Across B replications, average estimated OR for exposure on outcome, 
 #adjusting for U
-mean_results["OR_exposure_Uyes"]
+mean_OR_exposure_Uyes = exp(mean_results["log_OR_exposure_Uyes"]) #Save value
+names(mean_OR_exposure_Uyes) = c("mean_OR_exposure_Uyes")         #Name value
+mean_OR_exposure_Uyes                                             #Display value
 
 #Across B replications, average estimated OR for exposure on outcome, 
 #not adjusting for U
-mean_results["OR_exposure_Uno"]
+mean_OR_exposure_Uno = exp(mean_results["log_OR_exposure_Uno"]) #Save value
+names(mean_OR_exposure_Uno) = c("mean_OR_exposure_Uno")         #Name value
+mean_OR_exposure_Uno                                            #Display value
 
 #Proportion of 95% CIs for OR for exposure on outcome that include the 
 #causal/true OR 
