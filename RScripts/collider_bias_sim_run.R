@@ -70,13 +70,16 @@ sim_data <- suppressMessages(replicate(B, collider_sim())) %>% t() %>%
   as.data.frame()
 
 #---- Numerical summaries ----
+#Take the log of the ORs so that mean are calculated correctly
+sim_data %<>% mutate("log_OR_AY_S1" = log(OR_AY_S1), 
+                     "log_OR_AY_all" = log(OR_AY_all))
+
 #Across B replications, calculate and store mean value of selected variables 
 #Round to three decimal places
-
 mean_results <- sim_data %>% 
-  select("OR_AY_S1", "OR_AY_all", "mean_U", "mean_U_A1_all", "mean_U_A0_all", 
-         "mean_U_A1_S1", "mean_U_A0_S1", "p_A", "p_Y", "p_S", "p_S_A1", 
-         "p_S_A0", "p_Y_A0", "p_Y_A1", "p_Y_A0_S1", "p_Y_A1_S1") %>%
+  select("log_OR_AY_S1", "log_OR_AY_all", "mean_U", "mean_U_A1_all", 
+         "mean_U_A0_all", "mean_U_A1_S1", "mean_U_A0_S1", "p_A", "p_Y", "p_S", 
+         "p_S_A1", "p_S_A0", "p_Y_A0", "p_Y_A1", "p_Y_A0_S1", "p_Y_A1_S1") %>%
   colMeans() %>% round(3)
 
 #For each replication, generate indicator variable for whether the 95% CI for 
@@ -103,14 +106,14 @@ plot_title_S1 <- paste("Memory complaints = 1: Estimated OR and 95% CI from",
                        sep = " ")
 
 plot_subtitle_S1 <- paste("mean estimated OR = ", 
-                          mean_results[["OR_AY_S1"]], 
+                          round(exp(mean_results[["log_OR_AY_S1"]]), 3), 
                           "; 95% CI coverage probability = ", 
                           coverage_prob[["covg_OR_AY_S1"]],
                           sep = "")
 
 #To create horizontal lines in the plot with legend
 h_lines <- tibble(x = c(-Inf, Inf), "True OR" = causal_OR_AY, 
-                  "Estimated OR" = mean_results[["OR_AY_S1"]]) %>%
+                  "Estimated OR" = exp(mean_results[["log_OR_AY_S1"]])) %>%
   gather(key = "line_type", value = "value", 
          c("True OR", "Estimated OR")) %>% 
   mutate_at("line_type", as.factor)
@@ -153,13 +156,13 @@ plot_title_all <- paste("Whole population: Estimated OR and 95% CI from",
                         sep = " ")
 
 plot_subtitle_all <- paste("mean estimated OR = ", 
-                           mean_results[["OR_AY_all"]], 
+                           round(exp(mean_results[["log_OR_AY_all"]]), 3), 
                            "; 95% CI coverage probability = ", 
                            coverage_prob[["covg_OR_AY_all"]], sep = "")
 
 #To create horizontal lines in the plot with legend
 h_lines <- tibble(x = c(-Inf, Inf), "True OR" = causal_OR_AY, 
-                  "Estimated OR" = mean_results[["OR_AY_all"]]) %>%
+                  "Estimated OR" = exp(mean_results[["log_OR_AY_all"]])) %>%
   gather(key = "line_type", value = "value", 
          c("True OR", "Estimated OR")) %>% 
   mutate_at("line_type", as.factor)
@@ -273,13 +276,17 @@ mean_results[c("mean_U_A1_S1", "mean_U_A0_S1")]
 mean_results[c("mean_U_A1_all", "mean_U_A0_all")]
 
 #Check ORs and 95% CI coverage in whole population (no bias anticipated)
-mean_results["OR_AY_all"]
-coverage_prob["covg_OR_AY_all"]
+mean_OR_AY_all = exp(mean_results["log_OR_AY_all"]) #Save value
+names(mean_OR_AY_all) = c("mean_OR_AY_all")         #Name value
+mean_OR_AY_all                                      #Display value
 
 #Estimate of primary interest: Estimated ORs among S = 1
-mean_results["OR_AY_S1"]
+mean_OR_AY_S1 = exp(mean_results["log_OR_AY_S1"])   #Save value
+names(mean_OR_AY_S1) = c("mean_OR_AY_S1")           #Name value
+mean_OR_AY_S1                                       #Display value
 
 #Proportion of 95% CIs that include the causal/true OR 95% CI coverage
+coverage_prob["covg_OR_AY_all"]
 coverage_prob["covg_OR_AY_S1"]
 
 #---- Display run time ----
