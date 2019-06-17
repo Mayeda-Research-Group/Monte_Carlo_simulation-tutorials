@@ -106,7 +106,7 @@ plot_title_S1 <- paste("Memory complaints = 1: Estimated OR and 95% CI from",
                        sep = " ")
 
 plot_subtitle_S1 <- paste("mean estimated OR = ", 
-                          round(exp(mean_results[["log_OR_AY_S1"]]), 3), 
+                          round(exp(mean_results[["log_OR_AY_S1"]]), 2), 
                           "; 95% CI coverage probability = ", 
                           coverage_prob[["covg_OR_AY_S1"]],
                           sep = "")
@@ -156,7 +156,7 @@ plot_title_all <- paste("Whole population: Estimated OR and 95% CI from",
                         sep = " ")
 
 plot_subtitle_all <- paste("mean estimated OR = ", 
-                           round(exp(mean_results[["log_OR_AY_all"]]), 3), 
+                           round(exp(mean_results[["log_OR_AY_all"]]), 2), 
                            "; 95% CI coverage probability = ", 
                            coverage_prob[["covg_OR_AY_all"]], sep = "")
 
