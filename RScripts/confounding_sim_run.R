@@ -55,7 +55,7 @@ source(here("RScripts", "confounding_sim_script.R"))  #call simulation script
 #---- Run the simulation ----  
 #Start timer
 start_time <- Sys.time()
-  
+
 #Create variable for causal/true ORs for effect of exposure on outcome 
 #specified in data generation and analysis file 
 true_OR_exposure_outcome = 1.0
@@ -92,7 +92,7 @@ sim_data %<>%
          "covg_OR_exposure_Uno" = 
            if_else(ub_OR_exposure_Uno > true_OR_exposure_outcome & 
                      lb_OR_exposure_Uno < true_OR_exposure_outcome, 1, 0))
-                  
+
 #Average coverage probabilities across B replications
 coverage_prob <- sim_data %>% 
   select("covg_OR_exposure_Uyes", "covg_OR_exposure_Uno") %>%
@@ -155,14 +155,14 @@ plot_title_unadj <-
         sep = " ")
 
 plot_subtitle_unadj <- paste("mean estimated OR = ", 
-                           round(exp(mean_results[["log_OR_exposure_Uno"]]), 2), 
-                           "; 95% CI coverage probability = ", 
-                           coverage_prob[["covg_OR_exposure_Uno"]],
-                           sep = "")
+                             round(exp(mean_results[["log_OR_exposure_Uno"]]), 4), 
+                             "; 95% CI coverage probability = ", 
+                             coverage_prob[["covg_OR_exposure_Uno"]],
+                             sep = "")
 
 h_lines <- tibble(x = c(-Inf, Inf), "True OR" = true_OR_exposure_outcome, 
                   "Estimated OR" = 
-                    round(exp(mean_results[["log_OR_exposure_Uno"]])), 2) %>%
+                    round(exp(mean_results[["log_OR_exposure_Uno"]]), 2)) %>%
   gather(key = "line_type", value = "value", 
          c("True OR", "Estimated OR")) %>% 
   mutate_at("line_type", as.factor)
@@ -225,4 +225,3 @@ stop_time <- Sys.time()
 
 #---- Display run time ----
 stop_time - start_time
-           
