@@ -4,14 +4,14 @@
 # Crystal Shaw, PhD Student UCLA Department of Biostatistics                   #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
-# Simulation example: Collider-stratification bias                             #
+# Simulation example: Bias from unmeasured confounding                         #
 #                                                                              #
 # Required files to run simulation:                                            #
-#   (1) collider_bias_sim_par.R:                                               #
+#   (1) confounding_sim_par.R:                                                 #
 #       -Sets parameter inputs for the simulation                              #
-#   (2) collider_bias_sim_script.R:                                            #
+#   (2) confounding_sim_script.R:                                              #
 #       -Generates and analyzes data and returns results                       #
-#   (3) colider_bias_sim_run.R:                                                #
+#   (3) confounding_sim_run.R:                                                 #
 #       -Runs simulation and stores results                                    #                                                              
 #******************************************************************************#
 
@@ -26,20 +26,17 @@
 #******************************************************************************#
 #                             SET PARAMETERS                                   #
 #******************************************************************************#
-B = 100         #number of iterations of sample generation
+B = 1000         #number of iterations of sample generation
 num_obs = 5000   #number of observations in each sample
 
-#Specify the prevalence of A (exposure)
-p_A <- 0.2
+#---- Parameters for odds of exposure ----
+g0 = log(0.20/(1-0.20))	#log odds [p/(1-p)] of exposure for ref group (U = 0)
+g1 = log(2.0) 			    #effect of one-unit higher U on log odds of exposure 
 
-#Parameters for the odds of S (selection)
-g0 <- log(0.10/(1 - 0.10)) #log odds of S for ref group (A = 0 and U = 0)
-g1 <- log(5.0) #log OR for effect of A on log odds of selection (OR = 5.0)
-g2 <- log(5.0) #log OR for effect of U on log odds of selection (OR = 5.0)
-g3 <- log(1.0)  #log OR for interaction between A and U on    (OR = 5.0)
+#---- Parameters for odds of outcome ----
+b0 = log(0.10/(1-0.10)) #log odds [p/(1-p)] of outcome for ref group 
+                        #(U = 0, exp = 0)
+b1 = log(1.0) 			    #effect of exposure on log odds of outcome
+b2 = log(2.0) 		      #effect of one-unit higher U on log odds of outcome 
 
-#Parameters for the odds of Y (outcome)
-b0 <- log(0.05/(1 - 0.05)) #log odds of Y for ref group (A = 0, U = 0, S = 0)
-b1 <- log(1.0) #log OR for effect of A on log odds of Y (OR = 1.0)
-b2 <- log(5.0) #log OR for effect of U on log odds of Y (OR = 5.0)
 

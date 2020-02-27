@@ -1,0 +1,376 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\emayeda\Box\GSA2019_bias_workshop\Collider_bias_simulation_tutorial\collider_bias_simulation_Stata\Do_files\..\Logs\simulation_workshop_collider_bias_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}13 Nov 2019, 09:50:32
+{txt}
+{com}. 
+. 
+. /*Start timer*/
+. timer clear 2
+{txt}
+{com}. timer on 2
+{txt}
+{com}. 
+. *call preamble file
+. do 1_simulation_workshop_collider_bias_preamble.do
+{txt}
+{com}. /******************************************************************************/
+. /* GSA Workshop: Bias Analysis                                                                                            */
+. /* November 13, 2019                                                                                                              */                                                                                                    */
+. /* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health                           */
+. /* Questions/Comments: ermayeda@ph.ucla.edu                                                                       */
+. /*                                                                                                                                                        */
+. /* Simulation example: Collider-stratification bias                                                       */
+. /*                                                                                                                                                        */
+. /* Required files to run simulation:                                                                              */
+. /* 1) simulation_workshop_colldier_bias_preamble.do:                                              */ 
+. /*              -Sets parameter inputs for simulation                                                             */
+. /* 2) simulation_workshop_colldier_bias_data_gen_analysis.do:                             */
+. /*              -Generates and analyzes data and stores results                                           */
+. /* 3) simulation_workshop_colldier_bias_run.do:                                                           */ 
+. /*              -Runs simulation and stores results                                                                       */
+. /*                                                                                                                                                        */
+. /* Stata version 15                                                                                                                       */
+. /******************************************************************************/
+. 
+. /******************************************************************************/
+. /* The purpose of this file is to set the parameter values (stored as             */
+. /* global macro variables) to be used in the data-generation and analysis         */ 
+. /* file. This way, you can have separate files for different parameter sets   */ 
+. /* and use one file for the data-generation and analysis code.                            */
+. /* If a specific path is not included for a given causal structure of             */ 
+. /* interest, set the parameter to 0.                                                                              */
+. /******************************************************************************/
+. 
+. 
+. /*******************************************************/
+. /******** Set parameters                                                ********/
+. /*******************************************************/
+. global B = 1000                         //number of iterations of sample generation
+{txt}
+{com}. global num_obs = 5000                   //number of observations in each sample
+{txt}
+{com}. 
+. *Specify prevalence of A (exposure)
+. global P_A = 0.2         
+{txt}
+{com}. 
+. *Parameters for odds of S (selection)
+. global g0 = ln(0.10/(1-0.10))   //log odds of S for ref group (A=0 and U=0) 
+{txt}
+{com}. global g1 = ln(5.0)                             //log OR for effect of A on log odds of selection (OR=5.0)      
+{txt}
+{com}. global g2 = ln(5.0)                             //log OR for effect of U on log odds of selection (OR=5.0)
+{txt}
+{com}. global g3 = ln(1.0)                             //log OR for interaction between A and U on  (OR=1.0)
+{txt}
+{com}. 
+. 
+. *Parameters for odds of Y (outcome)
+. global b0 = ln(0.05/(1-0.05))   //log odds of Y for ref group (A=0, U=0, and S=0)
+{txt}
+{com}. global b1 = ln(1.0)                             //log OR for effect of A on log odds of Y (OR=1.0) 
+{txt}
+{com}. global b2 = ln(5.0)                             //log OR for effect of U on log odds of Y (OR=5.0)
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. 
+. /*Specify desired number of iterations of sample generation*/
+. local B = $B
+{txt}
+{com}. 
+. /*Create local variable for causal/true OR for A on Y specified in data
+> generation and analysis file*/
+. local causal_OR_AY = exp($b1)
+{txt}
+{com}. 
+. 
+. /*Create a local macro variable for "scalar_X = variable_X".
+> We will this local macro in the simulate command. This will pull in scalars  
+> from the data generation and analysis file and store each scalar as a variable
+> with the same name.*/
+. local simlist ""
+{txt}
+{com}. foreach x in OR_AY_S1 ub_OR_AY_S1 lb_OR_AY_S1 ///
+>          OR_AY_all ub_OR_AY_all lb_OR_AY_all ///
+>          mean_U ///
+>          mean_U_A1_all mean_U_A0_all ///
+>          mean_U_A1_S1 mean_U_A0_S1 ///
+>          p_A p_Y p_S ///
+>          p_S_A1 p_S_A0  ///
+>          p_Y_A0 p_Y_A1 ///
+>          p_Y_A0_S1 p_Y_A1_S1 ///
+> {c -(} 
+{txt}  2{com}.    local simlist "`simlist' `x'=`x'"
+{txt}  3{com}. {c )-}
+{txt}
+{com}. 
+. 
+. /***Run simulation***/
+. simulate `simlist', ///
+> reps(`B') seed(67208105): do 2_simulation_workshop_collider_bias_data_gen_analysis //replace with name of your data generation do file
+{p2colset 10 20 24 2}{...}
+
+{txt}{p2col :command:}do 2_simulation_workshop_collider_bias_data_gen_analysis{p_end}
+{p2colset 9 20 24 2}{...}
+{p2col :OR_AY_S1:}{res:OR_AY_S1}{p_end}
+{p2colset 6 20 24 2}{...}
+{p2col :ub_OR_AY_S1:}{res:ub_OR_AY_S1}{p_end}
+{p2colset 6 20 24 2}{...}
+{p2col :lb_OR_AY_S1:}{res:lb_OR_AY_S1}{p_end}
+{p2colset 8 20 24 2}{...}
+{p2col :OR_AY_all:}{res:OR_AY_all}{p_end}
+{p2colset 5 20 24 2}{...}
+{p2col :ub_OR_AY_all:}{res:ub_OR_AY_all}{p_end}
+{p2colset 5 20 24 2}{...}
+{p2col :lb_OR_AY_all:}{res:lb_OR_AY_all}{p_end}
+{p2colset 11 20 24 2}{...}
+{p2col :mean_U:}{res:mean_U}{p_end}
+{p2colset 4 20 24 2}{...}
+{p2col :mean_U_A1_all:}{res:mean_U_A1_all}{p_end}
+{p2colset 4 20 24 2}{...}
+{p2col :mean_U_A0_all:}{res:mean_U_A0_all}{p_end}
+{p2colset 5 20 24 2}{...}
+{p2col :mean_U_A1_S1:}{res:mean_U_A1_S1}{p_end}
+{p2colset 5 20 24 2}{...}
+{p2col :mean_U_A0_S1:}{res:mean_U_A0_S1}{p_end}
+{p2colset 14 20 24 2}{...}
+{p2col :p_A:}{res:p_A}{p_end}
+{p2colset 14 20 24 2}{...}
+{p2col :p_Y:}{res:p_Y}{p_end}
+{p2colset 14 20 24 2}{...}
+{p2col :p_S:}{res:p_S}{p_end}
+{p2colset 11 20 24 2}{...}
+{p2col :p_S_A1:}{res:p_S_A1}{p_end}
+{p2colset 11 20 24 2}{...}
+{p2col :p_S_A0:}{res:p_S_A0}{p_end}
+{p2colset 11 20 24 2}{...}
+{p2col :p_Y_A0:}{res:p_Y_A0}{p_end}
+{p2colset 11 20 24 2}{...}
+{p2col :p_Y_A1:}{res:p_Y_A1}{p_end}
+{p2colset 8 20 24 2}{...}
+{p2col :p_Y_A0_S1:}{res:p_Y_A0_S1}{p_end}
+{p2colset 8 20 24 2}{...}
+{p2col :p_Y_A1_S1:}{res:p_Y_A1_S1}{p_end}
+
+Simulations ({res}1000{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+
+{com}. 
+. /*Across all B replications, calculate and store mean value of each variable as a scalar*/ 
+. *Take the log of the ORs so that means are calculated correctly
+. *Round scalars to two decimal places
+. gen log_OR_AY_S1 = ln(OR_AY_S1)                                                                                                                                                                         
+{txt}
+{com}. gen log_OR_AY_all = ln(OR_AY_all)
+{txt}
+{com}. foreach b in log_OR_AY_S1 ///
+>                          log_OR_AY_all ///
+>                          mean_U ///
+>                          mean_U_A1_all mean_U_A0_all ///
+>                          mean_U_A1_S1 mean_U_A0_S1 ///
+>                          p_A p_Y p_S ///
+>                          p_S_A1 p_S_A0  ///
+>                          p_Y_A0 p_Y_A1 ///
+>                          p_Y_A0_S1 p_Y_A1_S1 {c -(}
+{txt}  2{com}. summarize `b', meanonly
+{txt}  3{com}. scalar mean_`b' = round(r(mean),0.001)
+{txt}  4{com}. local mean_`b' = round(r(mean),0.001)
+{txt}  5{com}. {c )-}
+{txt}
+{com}. scalar exp_mean_log_OR_AY_S1   = round(exp(mean_log_OR_AY_S1),0.01)
+{txt}
+{com}. local exp_mean_log_OR_AY_S1    = round(exp(mean_log_OR_AY_S1),0.01)
+{txt}
+{com}. scalar exp_mean_log_OR_AY_all  = round(exp(mean_log_OR_AY_all),0.01)
+{txt}
+{com}. local exp_mean_log_OR_AY_all   = round(exp(mean_log_OR_AY_all),0.01)
+{txt}
+{com}. 
+. 
+. /*For each sample, generate indicator variable for whether the 95% CI for 
+> the estimated OR_AY includes the causal/true OR_AY*/
+. gen covg_OR_AY_S1 = (lb_OR_AY_S1  < `causal_OR_AY' & ub_OR_AY_S1  > `causal_OR_AY')
+{txt}
+{com}. gen covg_OR_AY_all = (lb_OR_AY_all  < `causal_OR_AY' & ub_OR_AY_all  > `causal_OR_AY')
+{txt}
+{com}. 
+. 
+. /*Across all B replications, calculate and store the proportion of times the
+> 95% CI includes the causal/true OR_AY (95% CI coverage)*/ 
+. foreach b in covg_OR_AY_S1 covg_OR_AY_all {c -(}
+{txt}  2{com}. summarize `b', meanonly
+{txt}  3{com}. scalar P_`b' = round(r(mean),0.001)
+{txt}  4{com}. local P_`b' = round(r(mean),0.001)
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. 
+. /*Generate plots of estimated OR and 95% CI across B simulated samples*/
+. gen sample = _n
+{txt}
+{com}. 
+. *Plot estimated OR S=1
+. twoway (rcap lb_OR_AY_S1 ub_OR_AY_S1 sample) ///
+> (scatter OR_AY_S1 sample, msymbol(circle) mcolor(navy) mfcolor(edkblue)) ///
+> (function y=1 , lwidth(thick) clcolor(red) lpat(solid) range(sample) ) ///
+> , ///
+> ytitle(estimated OR (95% CI))  ///
+> ylabel(0.6(.2)2.0) xscale(off) legend(off) ///
+> title(Memory complaints=1: Estimated OR and 95% CI from `B' simulated samples, size(medsmall) ) ///
+> subtitle(mean estimated OR = `exp_mean_log_OR_AY_S1'; 95% CI coverage = `P_covg_OR_AY_S1', size(medsmall))
+{res}{txt}
+{com}.         graph export `plots'plot_est_OR_CI_S1.png,replace
+{txt}(file ..\Plots\plot_est_OR_CI_S1.png written in PNG format)
+
+{com}. 
+. *Plot estimated OR for whole sample
+. local P_covg_OR_AY_all : di %4.3f `P_covg_OR_AY_all' /*fixing rounding problem in this local variable*/
+{res}{txt}
+{com}. twoway (rcap lb_OR_AY_all ub_OR_AY_all  sample) ///
+> (scatter OR_AY_all sample, msymbol(circle) mcolor(navy) mfcolor(edkblue)) ///
+> (function y=1 , lwidth(thick) clcolor(red) lpat(solid) range(sample))  ///
+> , ///
+> ytitle(estimated OR (95% CI))  ///
+> ylabel(0.6(.2)2.0) xscale(off) legend(off) ///
+> title(Whole population: Estimated OR and 95% CI from `B' simulated samples, size(medsmall) ) ///
+> subtitle(mean estimated OR = `exp_mean_log_OR_AY_all'; 95% CI coverage = `P_covg_OR_AY_all', size(medsmall))
+{res}{txt}
+{com}.         graph export `plots'plot_est_OR_CI_all.png,replace
+{txt}(file ..\Plots\plot_est_OR_CI_all.png written in PNG format)
+
+{com}. 
+. 
+. /*Plot mean U across the B iterations of sample generation by S and overall*/
+. *Plot for S=1
+. twoway (histogram mean_U_A1_S1, start(-0.11) width(0.01) color(blue)) ///
+>        (histogram mean_U_A0_S1, start(-0.11) width(0.01) ///
+>            fcolor(cranberry) lcolor(cranberry)), ytitle(, size(large)) ///
+>            ylabel(, labsize(large)) xlabel(, labsize(large)) ///
+>            xscale(range(-0.1 1.2)) xlabel(-0.2(.2)1.2) ///
+>            yscale(range(0 25)) ylabel(0(5)25) ///
+>            legend(order(1 "anxiety=1" 2 "anxiety=0" ) size(large)) ///
+>            title(memory complaints=1: distribution of U,size(large)) graphregion(color(white)) ///
+>            subtitle(mean U anxiety=1 = `mean_mean_U_A1_S1'; mean U anxiety=0 = `mean_mean_U_A0_S1')
+{res}{txt}
+{com}.            
+.            graph export `plots'histogram_S1.png,replace
+{txt}(file ..\Plots\histogram_S1.png written in PNG format)
+
+{com}.            
+. *Plot for whole sample     
+. twoway (histogram mean_U_A1_all, start(-0.11) width(0.01) fcolor(blue) lcolor(blue)) ///
+>        (histogram mean_U_A0_all, start(-0.11) width(0.01) ///
+>            fcolor(cranberry) lcolor(cranberry)), ytitle(, size(large)) ///
+>            ylabel(, labsize(large)) xlabel(, labsize(large)) ///
+>            xscale(range(-0.1 1.2)) xlabel(-0.2(.2)1.2) ///
+>            yscale(range(0 25)) ylabel(0(5)25) ///
+>            legend(order(1 "anxiety=1" 2 "anxiety=0" ) size(large)) ///
+>            title(whole population: distribution of U,size(large)) graphregion(color(white)) ///
+>            subtitle(mean U anxiety=1 = `mean_mean_U_A1_all'; mean U anxiety=0 = `mean_mean_U_A0_all')
+{res}{txt}
+{com}.            
+.            graph export `plots'histogram_all.png,replace
+{txt}(file ..\Plots\histogram_all.png written in PNG format)
+
+{com}.         
+. 
+. /***List results across the B iterations of sample generation***/
+. 
+. *Check proportions of people with: 
+.         *exposure (A) = 1
+.         *selection (S) = 1
+.         *outcome (Y) = 1
+.         *outcome (Y) = 1 by exposure (A)
+. scalar list mean_p_A mean_p_S mean_p_Y mean_p_Y_A1 mean_p_Y_A0 mean_mean_U 
+{txt}  mean_p_A = {res}        .2
+{txt}  mean_p_S = {res}      .221
+{txt}  mean_p_Y = {res}      .108
+{txt}mean_p_Y_A1 = {res}      .108
+{txt}mean_p_Y_A0 = {res}      .108
+{txt}mean_mean_U = {res}         0
+{txt}
+{com}. 
+. *Check proportion of people with outcome (Y) = 1 by exposure (A) among S=1
+. scalar list mean_p_Y_A1_S1 mean_p_Y_A0_S1
+{txt}mean_p_Y_A1_S1 = {res}      .193
+{txt}mean_p_Y_A0_S1 = {res}      .265
+{txt}
+{com}. 
+. *Check distribution of U by A among S=1
+. scalar list mean_mean_U_A1_S1 mean_mean_U_A0_S1 
+{txt}mean_mean_U_A1_S1 = {res}      .666
+{txt}mean_mean_U_A0_S1 = {res}      .984
+{txt}
+{com}. 
+. *Check distribution of U by A among full sample
+. scalar list mean_mean_U_A1_all mean_mean_U_A0_all
+{txt}mean_mean_U_A1_all = {res}         0
+{txt}mean_mean_U_A0_all = {res}         0
+{txt}
+{com}. 
+. *Check mean OR and 95% CI coverage in whole population (no bias anticipated)
+. scalar list exp_mean_log_OR_AY_all
+{txt}exp_mean_log_OR_AY_all = {res}         1
+{txt}
+{com}. scalar list P_covg_OR_AY_all
+{txt}P_covg_OR_AY_all = {res}       .94
+{txt}
+{com}. 
+. *Estimate of primary interest: Mean estimated ORs among S=1
+. scalar list exp_mean_log_OR_AY_S1
+{txt}exp_mean_log_OR_AY_S1 = {res}       .66
+{txt}
+{com}. 
+. *Proportion of 95% CIs that include the causal/true OR 95% CI coverage)
+. scalar list P_covg_OR_AY_S1                                     
+{txt}P_covg_OR_AY_S1 = {res}      .238
+{txt}
+{com}. 
+. 
+. /*Save results. One row = one iteration of sample generation*/     
+. *Excel file
+. export excel using `data'simulation_workshop_collider_bias_results_each_replication, sheet("Results") sheetmodify firstrow(variables)
+{res}{txt}file ..\Data\simulation_workshop_collider_bias_results_each_replication.xls saved
+
+{com}. 
+. *Stata data file
+. save "`data'simulation_workshop_collider_bias_results_each_replication.dta", replace
+{txt}file ..\Data\simulation_workshop_collider_bias_results_each_replication.dta saved
+
+{com}. 
+. 
+. /*End timer and display computational time (in seconds)*/
+. timer off 2
+{txt}
+{com}. timer list 2
+{res}   2:     74.07 /        1 =      74.0710
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. exit, clear
