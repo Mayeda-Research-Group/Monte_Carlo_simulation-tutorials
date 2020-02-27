@@ -11,7 +11,7 @@
 #       -Sets parameter inputs for the simulation                              #
 #   (2) collider_bias_sim_script.R:                                            #
 #       -Generates and analyzes data and returns results                       #
-#   (3) colider_bias_sim_run.R:                                                #
+#   (3) collider_bias_sim_run.R:                                                #
 #       -Runs simulation and stores results                                    #                                                              
 #******************************************************************************#
 
