@@ -49,8 +49,10 @@ options(scipen = 999)
 set.seed(4418)
 
 #---- Source Files ----
-source(here("RScripts", "collider_bias_sim_par.R"))     #parameter file
-source(here("RScripts", "collider_bias_sim_script.R"))  #simulation script
+source(here("Collider_bias_simulation_tutorial", "collider_bias_simulation_R", 
+            "RScripts", "collider_bias_sim_par.R"))     #parameter file
+source(here("Collider_bias_simulation_tutorial", "collider_bias_simulation_R", 
+            "RScripts", "collider_bias_sim_script.R"))  #simulation script
 
 #---- Run the simulation ----  
 #Start timer
@@ -120,7 +122,7 @@ h_lines <- tibble(x = c(-Inf, Inf), "True OR" = causal_OR_AY,
 
 #Releveling factors for ggplot legend order
 h_lines$line_type <- fct_relevel(h_lines$line_type, "True OR")
-  
+
 CI_S1_plot <- 
   ggplot(data = sim_data, aes(x = seq(from = 1, to = nrow(sim_data), by = 1), 
                               y = OR_AY_S1)) + 
@@ -145,7 +147,9 @@ CI_S1_plot <-
                                     by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
-ggsave(filename = here("Plots", "plot_est_OR_CI_S1.jpeg"), 
+ggsave(filename = here("Collider_bias_simulation_tutorial", 
+                       "collider_bias_simulation_R", 
+                       "Plots", "plot_est_OR_CI_S1.jpeg"), 
        plot = CI_S1_plot, width = 8.25, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')                            
 
@@ -191,7 +195,9 @@ CI_all_plot <-
                                     by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
-ggsave(filename = here("Plots", "plot_est_OR_CI_all.jpeg"), 
+ggsave(filename = here("Collider_bias_simulation_tutorial", 
+                       "collider_bias_simulation_R", 
+                       "Plots", "plot_est_OR_CI_all.jpeg"), 
        plot = CI_all_plot, width = 8, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')
 
@@ -224,7 +230,9 @@ U_hist_S1 <-
                          "; mean U anxiety = 0 = ", 
                          mean_results[["mean_U_A0_S1"]]))
 
-ggsave(filename = here("Plots", "histogram_S1.jpeg"), 
+ggsave(filename = here("Collider_bias_simulation_tutorial", 
+                       "collider_bias_simulation_R", 
+                       "Plots", "histogram_S1.jpeg"), 
        plot = U_hist_S1, width = 8, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')
 
@@ -251,12 +259,16 @@ U_hist_all <-
                          "; mean U anxiety = 0 = ", 
                          mean_results[["mean_U_A0_all"]]))
 
-ggsave(filename = here("Plots", "histogram_all.jpeg"), 
+ggsave(filename = here("Collider_bias_simulation_tutorial", 
+                       "collider_bias_simulation_R", 
+                       "Plots", "histogram_all.jpeg"), 
        plot = U_hist_all, width = 8, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')
 
 #---- Save results as .csv ----
-write_csv(sim_data, here("Data", "collider_bias_results_each_replication.csv"))
+write_csv(sim_data, here("Collider_bias_simulation_tutorial", 
+                         "collider_bias_simulation_R", 
+                         "Data", "collider_bias_results_each_replication.csv"))
 
 #---- Display numerical results ----
 #Check proportions of people with: 
