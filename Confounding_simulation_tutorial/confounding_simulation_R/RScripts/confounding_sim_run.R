@@ -49,8 +49,10 @@ set.seed(20190130)
 options(scipen = 999)
 
 #---- Source Files ----
-source(here("RScripts", "confounding_sim_par.R"))     #call parameter file
-source(here("RScripts", "confounding_sim_script.R"))  #call simulation script
+source(here("Confounding_simulation_tutorial", "confounding_simulation_R", 
+            "RScripts", "confounding_sim_par.R"))     #call parameter file
+source(here("Confounding_simulation_tutorial", "confounding_simulation_R", 
+            "RScripts", "confounding_sim_script.R"))  #call simulation script
 
 #---- Run the simulation ----  
 #Start timer
@@ -144,7 +146,9 @@ CI_adjusted_plot <-
                                     by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
-ggsave(filename = here("Plots", "plot_est_OR_CI_adj.jpeg"), 
+ggsave(filename = here("Confounding_simulation_tutorial", 
+                       "confounding_simulation_R", 
+                       "Plots", "plot_est_OR_CI_adj.jpeg"), 
        plot = CI_adjusted_plot, width = 8, height = 6, dpi = 300, units = "in", 
        device = 'jpeg')                            
 
@@ -191,12 +195,16 @@ CI_unadjusted_plot <-
                                     by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
-ggsave(filename = here("Plots", "plot_est_OR_CI_crude.jpeg"), 
+ggsave(filename = here("Confounding_simulation_tutorial", 
+                       "confounding_simulation_R", 
+                       "Plots", "plot_est_OR_CI_crude.jpeg"), 
        plot = CI_unadjusted_plot, width = 8, height = 6, dpi = 300, 
        units = "in", device = 'jpeg')     
 
 #---- Save results as .csv ----
-write_csv(sim_data, here("Data", "confounding_results_each_replication.csv"))
+write_csv(sim_data, here("Confounding_simulation_tutorial", 
+                         "confounding_simulation_R", 
+                         "Data", "confounding_results_each_replication.csv"))
 
 #---- Display numerical results ----
 #Across B replications, average mean value of U, 
