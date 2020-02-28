@@ -1,0 +1,2 @@
+This is a placeholder file so that GitHub will not delete this subfolder when 
+you download the workshop files. 
