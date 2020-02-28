@@ -141,9 +141,8 @@ CI_adjusted_plot <-
   ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(0.6, 2.8), 
-                     breaks = c(seq(from = 0.6, to = 3, 
-                                    by = 0.2))) + 
+  coord_cartesian(ylim = c(0.6, 2.8)) +
+  scale_y_continuous(breaks = c(seq(from = 0.6, to = 3, by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Confounding_simulation_tutorial", 
@@ -190,9 +189,8 @@ CI_unadjusted_plot <-
   ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(0.6, 2.8), 
-                     breaks = c(seq(from = 0.6, to = 2.8, 
-                                    by = 0.2))) + 
+  coord_cartesian(ylim = c(0.6, 2.8)) +
+  scale_y_continuous(breaks = c(seq(from = 0.6, to = 2.8, by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Confounding_simulation_tutorial", 

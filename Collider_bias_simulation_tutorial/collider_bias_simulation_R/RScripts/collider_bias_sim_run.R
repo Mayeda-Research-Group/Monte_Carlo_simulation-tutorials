@@ -142,9 +142,8 @@ CI_S1_plot <-
   ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
   theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(0.2, 2), 
-                     breaks = c(seq(from = 0.2, to = 2, 
-                                    by = 0.2))) + 
+  coord_cartesian(ylim = c(0.2, 2)) +
+  scale_y_continuous(breaks = c(seq(from = 0.2, to = 2, by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Collider_bias_simulation_tutorial", 
@@ -189,10 +188,9 @@ CI_all_plot <-
        subtitle = plot_subtitle_all) + 
   ylab("estimated OR (95% CI)") + xlab("") +
   theme(plot.title = element_text(size = 15)) + 
-  theme(axis.title.y = element_text(size = 12)) + 
-  scale_y_continuous(limits = c(0.2, 2), 
-                     breaks = c(seq(from = 0.2, to = 2, 
-                                    by = 0.2))) + 
+  theme(axis.title.y = element_text(size = 12)) +
+  coord_cartesian(ylim = c(0.2, 2)) +
+  scale_y_continuous(breaks = c(seq(from = 0.2, to = 2, by = 0.2))) + 
   scale_x_continuous(breaks = NULL)
 
 ggsave(filename = here("Collider_bias_simulation_tutorial", 
@@ -220,10 +218,9 @@ U_hist_S1 <-
   theme(legend.position = "bottom") + 
   scale_fill_manual(name = "", values = c("#4ABDAC", "#A9A9A9"), 
                     labels = c("anxiety = 1","anxiety = 0")) + xlab("") +
-  scale_x_continuous(limits = c(-0.2, 1.2), 
-                     breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
-  scale_y_continuous(limits = c(0, 25), 
-                     breaks = c(seq(from = 0, to = 25, by = 5))) + 
+  coord_cartesian(xlim = c(-0.2, 1.2), ylim = c(0, 25)) +
+  scale_x_continuous(breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
+  scale_y_continuous(breaks = c(seq(from = 0, to = 25, by = 5))) +
   labs(title = "memory complaints = 1: distribution of U", 
        subtitle = paste0("mean U anxiety = 1 = ", 
                          mean_results[["mean_U_A1_S1"]], 
@@ -249,10 +246,9 @@ U_hist_all <-
   theme(legend.position = "bottom") +
   scale_fill_manual(name = "", values = c("#4ABDAC", "#A9A9A9"), 
                     labels = c("anxiety = 1","anxiety = 0")) + xlab("") + 
-  scale_x_continuous(limits = c(-0.2, 1.2), 
-                     breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
-  scale_y_continuous(limits = c(0, 25), 
-                     breaks = c(seq(from = 0, to = 25, by = 5))) + 
+  coord_cartesian(xlim = c(-0.2, 1.2), ylim = c(0, 25)) +
+  scale_x_continuous(breaks = c(seq(from = -0.2, to = 1.2, by = 0.2))) +
+  scale_y_continuous(breaks = c(seq(from = 0, to = 25, by = 5))) + 
   labs(title = "whole population: distribution of U", 
        subtitle = paste0("mean U anxiety = 1 = ", 
                          mean_results[["mean_U_A1_all"]], 
