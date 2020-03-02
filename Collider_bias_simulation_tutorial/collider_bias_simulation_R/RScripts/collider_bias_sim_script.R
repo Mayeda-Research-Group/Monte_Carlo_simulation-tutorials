@@ -1,7 +1,8 @@
 #******************************************************************************#
-# SER Workshop: Using Monte Carlo Simulations for Quantitative Bias Analysis   #
-# June 18, 2019                                                                #
-# Crystal Shaw, PhD Student UCLA Department of Biostatistics                   #
+# Using Monte Carlo Simulations for Quantitative Bias Analysis                 #
+# Last updated: June 18, 2019                                                  #
+# Tutorial designed by Elizabeth Rose Mayeda, Assistant Professor UCLA         #         
+# R code by Crystal Shaw, PhD Student UCLA Department of Biostatistics         #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
 # Simulation example: Collider-stratification bias                             #
