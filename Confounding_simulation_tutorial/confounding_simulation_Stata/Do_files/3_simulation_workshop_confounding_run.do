@@ -1,25 +1,25 @@
 /******************************************************************************/
-/* GSA Workshop: Bias Analysis 												  */
-/* November 13, 2019														  */
-/* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health				  */
-/* Questions/Comments: ermayeda@ph.ucla.edu									  */
-/*																			  */
-/* Simulation example: Bias from unmeasured confounding						  */
-/*																			  */
-/* Required files to run simulation:										  */
-/* 1) simulation_workshop_confounding_preamble.do:							  */ 
-/*		-Sets parameter inputs for simulation 								  */
-/* 2) simulation_workshop_confounding_data_gen_analysis.do: 				  */
-/*		-Generates and analyzes data and stores results						  */
-/* 3) simulation_workshop_confounding_run.do: 								  */ 
-/*		-Runs simulation and stores results									  */
-/*																			  */
-/* Stata version 15															  */
+/* Tutorial: Using Monte Carlo Simulations for Quantitative Bias Analysis     */
+/* Last updated: March 2, 2020				                      */
+/* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health		      */
+/* Questions/Comments: ermayeda@ph.ucla.edu				      */
+/*									      */
+/* Simulation example: Bias from unmeasured confounding			      */
+/*									      */
+/* Required files to run simulation:					      */
+/* 1) simulation_workshop_confounding_preamble.do:			      */ 
+/*		-Sets parameter inputs for simulation 			      */
+/* 2) simulation_workshop_confounding_data_gen_analysis.do: 		      */
+/*		-Generates and analyzes data and stores results		      */
+/* 3) simulation_workshop_confounding_run.do: 				      */ 
+/*		-Runs simulation and stores results			      */
+/*									      */
+/* Stata version 15							      */
 /******************************************************************************/
 
 /******************************************************************************/
-/* The purpose of this file is to run multiple iterations of sample 		  */
-/* and summarize and store results.											  */
+/* The purpose of this file is to run multiple iterations of sample 	      */
+/* and summarize and store results.					      */
 /******************************************************************************/
 
 /*******************************************************************************
@@ -55,7 +55,7 @@ cd "C:\Users\emayeda\Box\GSA2019_bias_workshop\Confounding_simulation_tutorial\c
 /*Set working directories (for Windows--modify for Mac)*/
 local logs		"..\Logs\"
 local data		"..\Data\"
-local plots 	"..\Plots\"
+local plots 		"..\Plots\"
 
 
 /*Save log file*/  
