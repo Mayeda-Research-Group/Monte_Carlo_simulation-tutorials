@@ -1,7 +1,7 @@
 #******************************************************************************#
 # Using Monte Carlo Simulations for Quantitative Bias Analysis                 #
-# Last updated: June 18, 2019                                                  #
-# Tutorial designed by Elizabeth Rose Mayeda, Assistant Professor UCLA         #         
+# Last updated: March 2, 2020                                                  #
+# Tutorial designed by Elizabeth Rose Mayeda, Assistant Professor UCLA         #
 # R code by Crystal Shaw, PhD Student UCLA Department of Biostatistics         #
 # Questions/Comments: c.shaw@ucla.edu                                          #
 #                                                                              #
