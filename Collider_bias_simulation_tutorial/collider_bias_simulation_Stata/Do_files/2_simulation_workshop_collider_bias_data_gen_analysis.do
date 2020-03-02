@@ -1,32 +1,32 @@
 /******************************************************************************/
-/* GSA Workshop: Bias Analysis 												  */
-/* November 13, 2019														  */
-/* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health				  */
-/* Questions/Comments: ermayeda@ph.ucla.edu									  */
-/*																			  */
-/* Simulation example: Collider-stratification bias							  */
-/*																			  */
-/* Required files to run simulation:										  */
-/* 1) simulation_workshop_colldier_bias_preamble.do:						  */ 
-/*		-Sets parameter inputs for simulation 								  */
-/* 2) simulation_workshop_colldier_bias_data_gen_analysis.do: 				  */
-/*		-Generates and analyzes data and stores results						  */
-/* 3) simulation_workshop_colldier_bias_run.do: 							  */ 
-/*		-Runs simulation and stores results									  */
+/* Tutorial: Using Monte Carlo Simulations for Quantitative Bias Analysis     */
+/* Last updated: March 2, 2020				 	              */
+/* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health		      */
+/* Questions/Comments: ermayeda@ph.ucla.edu				      */
+/*							   		      */
+/* Simulation example: Collider-stratification bias			      */
+/*								  	      */
+/* Required files to run simulation:					      */
+/* 1) simulation_workshop_colldier_bias_preamble.do:			      */ 
+/*		-Sets parameter inputs for simulation 			      */
+/* 2) simulation_workshop_colldier_bias_data_gen_analysis.do: 		      */
+/*		-Generates and analyzes data and stores results		      */
+/* 3) simulation_workshop_colldier_bias_run.do: 			      */ 
+/*		-Runs simulation and stores results			      */
 /*																			  */
 /* Stata version 15															  */
 /******************************************************************************/
 
 /******************************************************************************/
-/* The purpose of this file is to generate and analyze data and store the 	  */
-/* parameter estimates for one iteration of sample generation				  */
+/* The purpose of this file is to generate and analyze data and store the     */
+/* parameter estimates for one iteration of sample generation		      */
 /******************************************************************************/
 
 *Start with a blank data set (no observations)
 set more off
 clear
 *set seed 67208113 	//For multiple iterations of sample generation, the seed 
-					//is set in the run simulation file
+			//is set in the run simulation file
 					
 /*Define working folder: update with your file path*/
 cd "C:\Users\emayeda\Box\GSA2019_bias_workshop\Collider_bias_simulation_tutorial\collider_bias_simulation_Stata\Do_files"
@@ -37,7 +37,7 @@ do 1_simulation_workshop_collider_bias_preamble.do
 	
 	
 /*******************************************************/
-/********	Step A. Create blank data set		********/
+/********	Step A. Create blank data set	********/
 /*******************************************************/
 
 set obs $num_obs //creates blank dataset with desired # observations
@@ -45,7 +45,7 @@ gen id = _n
 
 
 /*******************************************************/
-/********	Step B. Set parameters				********/
+/********	Step B. Set parameters		********/
 /*******************************************************/
 
 *Specify prevalence of A (exposure)
@@ -65,7 +65,7 @@ local b2 = $b2 	//log OR for effect of U on log odds of Y (OR=5.0)
 
 
 /*******************************************************/
-/********	Step C. Generate data				********/
+/********	Step C. Generate data		********/
 /*******************************************************/
 
 *Generate A, a binary variable drawn from a Bernoulli distribution with P(A=1) = "P_A"
@@ -89,12 +89,12 @@ gen P_Y = exp(`b0' + `b1'*A + `b2'*U)/(1 + exp(`b0' + `b1'*A + `b2'*U))
 gen Y = runiform()<P_Y
 
 /*******************************************************/
-/******** 	End data generation steps			********/
+/******** 	End data generation steps	********/
 /*******************************************************/
 
 
 /*******************************************************/
-/********	Step D. Look at data 				********/
+/********	Step D. Look at data 		********/
 /*******************************************************/
 
 /********Check distributions of variables and store results********/
