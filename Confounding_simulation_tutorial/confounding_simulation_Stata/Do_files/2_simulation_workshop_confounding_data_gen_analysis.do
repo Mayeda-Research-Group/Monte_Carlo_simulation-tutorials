@@ -1,32 +1,32 @@
 /******************************************************************************/
-/* GSA Workshop: Bias Analysis 												  */
-/* November 13, 2019														  */
-/* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health				  */
-/* Questions/Comments: ermayeda@ph.ucla.edu									  */
-/*																			  */
-/* Simulation example: Bias from unmeasured confounding						  */
-/*																			  */
-/* Required files to run simulation:										  */
-/* 1) simulation_workshop_confounding_preamble.do:							  */ 
-/*		-Sets parameter inputs for simulation 								  */
-/* 2) simulation_workshop_confounding_data_gen_analysis.do: 				  */
-/*		-Generates and analyzes data and stores results						  */
-/* 3) simulation_workshop_confounding_run.do: 								  */ 
-/*		-Runs simulation and stores results									  */
-/*																			  */
-/* Stata version 15															  */
+/* Tutorial: Using Monte Carlo Simulations for Quantitative Bias Analysis     */
+/* Last updated: March 2, 2020				                      */
+/* Elizabeth Rose Mayeda, UCLA Fielding School of Public Health		      */
+/* Questions/Comments: ermayeda@ph.ucla.edu				      */
+/*						  			      */
+/* Simulation example: Bias from unmeasured confounding			      */
+/*									      */
+/* Required files to run simulation:					      */
+/* 1) simulation_workshop_confounding_preamble.do:			      */ 
+/*		-Sets parameter inputs for simulation 			      */
+/* 2) simulation_workshop_confounding_data_gen_analysis.do: 		      */
+/*		-Generates and analyzes data and stores results		      */
+/* 3) simulation_workshop_confounding_run.do: 				      */ 
+/*		-Runs simulation and stores results			      */
+/*									      */
+/* Stata version 15							      */
 /******************************************************************************/
 
 /******************************************************************************/
-/* The purpose of this file is to generate and analyze data and store the 	  */
-/* parameter estimates for one iteration of sample generation				  */
+/* The purpose of this file is to generate and analyze data and store the     */
+/* parameter estimates for one iteration of sample generation		      */
 /******************************************************************************/
 
 *Start with a blank data set (no observations)
 set more off
 clear
 *set seed 67208113 	//For multiple iterations of sample generation, the seed 
-					//is set in the run simulation file
+			//is set in the run simulation file
 				
 				
 /*Define working folder: update with your file path*/
@@ -38,7 +38,7 @@ do 1_simulation_workshop_confounding_preamble.do
 
 
 /************************************************************/
-/********	Step A. Create blank data set	  		 ********/
+/********	Step A. Create blank data set	     ********/
 /************************************************************/
 
 set obs $num_obs //creates blank dataset with desired # observations
@@ -46,7 +46,7 @@ gen id = _n
 
 
 /************************************************************/
-/********	Step B. Set parameters					 ********/
+/********	Step B. Set parameters		     ********/
 /************************************************************/
 
 *Parameters for odds of exposure
@@ -60,7 +60,7 @@ local b2 = $b2 //effect of one-unit higher U on log odds of outcome
 
 
 /************************************************************/
-/********	Step C. Generate data					 ********/
+/********	Step C. Generate data		     ********/
 /************************************************************/
 
 *Generate U, where U~N(0,1)
@@ -80,12 +80,12 @@ gen outcome= runiform()<Poutcome
 
 
 /************************************************************/
-/******** 	End data generation steps		   		 ********/
+/******** 	End data generation steps	     ********/
 /************************************************************/
 
 
 /*************************************************************/
-/********	Step D. Analyze data & store results     ********/
+/********	Step D. Analyze data & store results  ********/
 /*************************************************************/
 
 *Store results as scalar variables	 
